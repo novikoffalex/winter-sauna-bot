@@ -42,7 +42,10 @@ class CryptoPaymentService
             'data' => $data
         ]));
 
-        return $this->makeRequest($url, $data);
+        $response = $this->makeRequest($url, $data);
+        error_log("NOWPayments createInvoice response: " . json_encode($response));
+        
+        return $response;
     }
 
     /**

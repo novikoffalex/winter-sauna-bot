@@ -45,14 +45,27 @@ class PaymentHandler
                 $returnUrl
             );
 
+            // Парсим invoice_id для сохранения
+            $invoiceId = $invoice['invoice_id'] ?? $invoice['id'] ?? $invoice['payment_id'] ?? 'unknown';
+            
             // Сохраняем информацию о заказе
-            $this->saveOrderInfo($orderId, $chatId, $service, $amount, $currency, $invoice['invoice_id']);
+            $this->saveOrderInfo($orderId, $chatId, $service, $amount, $currency, $invoiceId);
+
+            // Парсим ответ от NOWPayments
+            $invoiceId = $invoice['invoice_id'] ?? $invoice['id'] ?? $invoice['payment_id'] ?? 'unknown';
+            $payUrl = $invoice['pay_url'] ?? $invoice['payment_url'] ?? $invoice['checkout_url'] ?? $invoice['url'] ?? '';
+            
+            error_log("Parsed invoice data: " . json_encode([
+                'invoice_id' => $invoiceId,
+                'pay_url' => $payUrl,
+                'full_response' => $invoice
+            ]));
 
             return [
                 'success' => true,
                 'order_id' => $orderId,
-                'invoice_id' => $invoice['invoice_id'],
-                'pay_url' => $invoice['pay_url'],
+                'invoice_id' => $invoiceId,
+                'pay_url' => $payUrl,
                 'amount' => $amount,
                 'currency' => $currency
             ];
