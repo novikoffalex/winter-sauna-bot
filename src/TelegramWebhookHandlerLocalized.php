@@ -447,12 +447,6 @@ class TelegramWebhookHandlerLocalized
         $this->localization = new LocalizationService($userLanguage);
         
         try {
-            // Отправляем сообщение о начале обработки
-            $this->telegramService->sendMessage(
-                $chatId, 
-                "🎤 " . $this->localization->t('processing_voice') . "...",
-                $messageId
-            );
 
             // Создаем сервис транскрибации
             $transcriptionService = new TranscriptionService();
@@ -472,13 +466,6 @@ class TelegramWebhookHandlerLocalized
 
             // Анализируем транскрипцию
             $analysis = $transcriptionService->analyzeTranscription($transcription, $userLanguage);
-            
-            // Отправляем результат транскрипции
-            $this->telegramService->sendMessage(
-                $chatId,
-                "📝 " . $this->localization->t('transcription') . ": " . $transcription,
-                $messageId
-            );
 
             // Если это бронирование, обрабатываем его
             if ($analysis['is_booking']) {
