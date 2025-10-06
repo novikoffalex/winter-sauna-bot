@@ -24,19 +24,20 @@ class CryptoPaymentService
      */
     public function createInvoice($amount, $currency, $description, $orderId, $returnUrl = null)
     {
-        // Проверяем доступность валюты
-        $currencies = $this->getCurrencies();
-        if (!$currencies || !in_array($currency, $currencies)) {
-            error_log("Currency $currency not supported. Available currencies: " . json_encode($currencies));
-            throw new Exception("Currency $currency is not supported. Please try BTC or another available currency.");
-        }
+        // Используем USDT в сети TRON (жестко задано)
+        // $currencies = $this->getCurrencies();
+        // if (!$currencies || !in_array($currency, $currencies)) {
+        //     error_log("Currency $currency not supported. Available currencies: " . json_encode($currencies));
+        //     throw new Exception("Currency $currency is not supported. Please try BTC or another available currency.");
+        // }
 
         $url = $this->baseUrl . '/v1/payment';
         
         $data = [
             'price_amount' => $amount,
             'price_currency' => 'USD', // NOWPayments требует USD как базовую валюту
-            'pay_currency' => $currency,
+            'pay_currency' => 'USDT',
+            'pay_network' => 'TRX', // Сеть TRON для USDT
             'order_id' => $orderId,
             'order_description' => $description,
             'ipn_callback_url' => 'https://winter-sauna-bot-phuket-f79605d5d044.herokuapp.com/crypto-webhook.php',
