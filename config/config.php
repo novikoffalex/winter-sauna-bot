@@ -34,6 +34,9 @@ define('NOWPAYMENTS_API_KEY', $_ENV['NOWPAYMENTS_API_KEY'] ?? '');
 define('NOWPAYMENTS_PUBLIC_KEY', $_ENV['NOWPAYMENTS_PUBLIC_KEY'] ?? '');
 define('NOWPAYMENTS_WEBHOOK_SECRET', $_ENV['NOWPAYMENTS_WEBHOOK_SECRET'] ?? '');
 
+// Админ-токен для служебных операций (ручная выдача QR)
+define('ADMIN_TOKEN', $_ENV['ADMIN_TOKEN'] ?? '');
+
 // Конфигурация сервера
 define('WEBHOOK_VERIFICATION_TOKEN', $_ENV['WEBHOOK_VERIFICATION_TOKEN'] ?? '');
 define('NODE_ENV', $_ENV['NODE_ENV'] ?? 'development');

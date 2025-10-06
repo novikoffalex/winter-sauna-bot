@@ -14,6 +14,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
+// Служебный эндпоинт для ручной отправки QR по существующему заказу
+if (isset($_GET['admin']) && $_GET['admin'] === 'send-qr') {
+    $token = $_GET['token'] ?? '';
+    $orderId = $_GET['order_id'] ?? '';
+    if (!$token || $token !== ADMIN_TOKEN) {
+        http_response_code(401);
+        echo 'Unauthorized';
+        exit;
+    }
+    if (!$orderId) {
+        http_response_code(400);
+        echo 'order_id required';
+        exit;
+    }
+
+    require_once 'src/PaymentHandler.php';
+    require_once 'src/TicketService.php';
+
+    $handler = new PaymentHandler('en');
+    // Доступ к приватному getOrderInfo
+    $ref = new ReflectionClass($handler);
+    $getOrder = $ref->getMethod('getOrderInfo');
+    $getOrder->setAccessible(true);
+    $order = $getOrder->invoke($handler, $orderId);
+    if (!$order) {
+        http_response_code(404);
+        echo 'Order not found';
+        exit;
+    }
+
+    $ticketService = new TicketService();
+    $ticket = $ticketService->createTicket(
+        $order['order_id'],
+        $order['service'],
+        $order['amount'],
+        $order['currency'],
+        ['id' => $order['invoice_id']]
+    );
+    $qr = $ticketService->generateTicketQR($ticket);
+
+    $sendTicket = $ref->getMethod('sendTicketToUser');
+    $sendTicket->setAccessible(true);
+    $sendTicket->invoke($handler, $order['chat_id'], $ticket, $qr);
+
+    echo 'QR sent';
+    exit;
+}
+
 // Иначе показываем информацию о боте
 ?>
 <!DOCTYPE html>
