@@ -31,6 +31,7 @@ define('SAUNA_PHONE', $_ENV['SAUNA_PHONE'] ?? '+66-XX-XXX-XXXX');
 
 // Конфигурация криптоплатежек (NOWPayments)
 define('NOWPAYMENTS_API_KEY', $_ENV['NOWPAYMENTS_API_KEY'] ?? '');
+define('NOWPAYMENTS_PUBLIC_KEY', $_ENV['NOWPAYMENTS_PUBLIC_KEY'] ?? '');
 define('NOWPAYMENTS_WEBHOOK_SECRET', $_ENV['NOWPAYMENTS_WEBHOOK_SECRET'] ?? '');
 
 // Конфигурация сервера

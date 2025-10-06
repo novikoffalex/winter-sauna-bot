@@ -7,12 +7,14 @@
 class CryptoPaymentService
 {
     private $apiKey;
+    private $publicKey;
     private $baseUrl;
     private $webhookSecret;
 
     public function __construct()
     {
         $this->apiKey = NOWPAYMENTS_API_KEY ?? '';
+        $this->publicKey = NOWPAYMENTS_PUBLIC_KEY ?? '';
         $this->baseUrl = 'https://api.nowpayments.io';
         $this->webhookSecret = NOWPAYMENTS_WEBHOOK_SECRET ?? '';
     }
@@ -217,6 +219,7 @@ class CryptoPaymentService
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
             'x-api-key: ' . $this->apiKey,
+            'x-public-key: ' . $this->publicKey,
             'User-Agent: Zima-Sauna-Bot/1.0'
         ]);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
