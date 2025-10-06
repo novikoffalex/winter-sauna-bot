@@ -97,31 +97,26 @@ class TelegramWebhookHandlerLocalized
         // Логируем информацию о пользователе для отладки
         error_log("User data for language detection: " . json_encode($from));
         
-        // ВРЕМЕННО: Принудительно устанавливаем английский для тестирования
-        // TODO: Убрать это после тестирования
-        error_log("FORCING ENGLISH LANGUAGE FOR TESTING");
-        return 'en';
-        
         // Проверяем language_code в настройках пользователя
         if (isset($from['language_code'])) {
             $langCode = $from['language_code'];
             error_log("Detected language_code: " . $langCode);
             
-            // Если русский язык
+            // Если русский язык - используем русский
             if (strpos($langCode, 'ru') === 0) {
-                error_log("Language set to: ru");
+                error_log("Language set to: ru (Russian interface detected)");
                 return 'ru';
             }
             
-            // Если английский язык
+            // Если английский язык - используем английский
             if (strpos($langCode, 'en') === 0) {
-                error_log("Language set to: en");
+                error_log("Language set to: en (English interface detected)");
                 return 'en';
             }
         }
         
-        // По умолчанию английский (для международных туристов)
-        error_log("Language set to default: en");
+        // По умолчанию английский (для международных туристов на Пхукете)
+        error_log("Language set to default: en (for international tourists)");
         return 'en';
     }
 
