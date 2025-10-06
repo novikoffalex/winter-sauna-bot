@@ -251,13 +251,16 @@ class LocalizationService
      */
     public function t($key, $params = [])
     {
-        $translation = $this->translations[$this->userLanguage][$key] ?? $key;
-        
+        // Используем единый источник переводов с fallback на EN
+        $translation = $this->translations[$this->userLanguage][$key]
+            ?? $this->translations['en'][$key]
+            ?? $key;
+
         // Замена параметров в переводе
         foreach ($params as $param => $value) {
             $translation = str_replace('{' . $param . '}', $value, $translation);
         }
-        
+
         return $translation;
     }
 
@@ -401,18 +404,5 @@ class LocalizationService
         return $message;
     }
     
-    /**
-     * Получение перевода для ключа
-     */
-    public function t($key, $params = [])
-    {
-        $translation = $this->translations[$this->language][$key] ?? $this->translations['en'][$key] ?? $key;
-        
-        // Заменяем параметры
-        foreach ($params as $param => $value) {
-            $translation = str_replace('{' . $param . '}', $value, $translation);
-        }
-        
-        return $translation;
-    }
+    // УДАЛЕНО: дублирующийся метод t() (объединено выше)
 }
