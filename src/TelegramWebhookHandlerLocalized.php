@@ -216,6 +216,14 @@ class TelegramWebhookHandlerLocalized
         $callbackQueryId = $callbackQuery['id'];
         $from = $callbackQuery['from'];
 
+        // Сначала отвечаем на callback query (быстро!)
+        try {
+            $this->telegramService->answerCallbackQuery($callbackQueryId);
+        } catch (Exception $e) {
+            error_log("Callback query answer failed (probably too old): " . $e->getMessage());
+            // Продолжаем выполнение, даже если не удалось ответить на callback
+        }
+
         // Инициализируем локализацию для callback query
         $userLanguage = $this->detectUserLanguage($from);
         $this->localization = new LocalizationService($userLanguage);
@@ -223,14 +231,6 @@ class TelegramWebhookHandlerLocalized
         $this->aiService->initialize();
 
         error_log("Processing callback query from chat {$chatId} in language {$userLanguage}: {$data}");
-
-        // Отвечаем на callback query (игнорируем ошибки для старых запросов)
-        try {
-            $this->telegramService->answerCallbackQuery($callbackQueryId);
-        } catch (Exception $e) {
-            error_log("Callback query answer failed (probably too old): " . $e->getMessage());
-            // Продолжаем выполнение, даже если не удалось ответить на callback
-        }
 
         // Обрабатываем данные кнопки
         switch ($data) {

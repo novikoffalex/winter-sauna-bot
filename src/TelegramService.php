@@ -70,7 +70,13 @@ class TelegramService
             }
 
             if ($keyboard) {
-                $messageData['reply_markup'] = json_encode($keyboard);
+                // Проверяем, что это inline клавиатура
+                if (isset($keyboard['inline_keyboard'])) {
+                    $messageData['reply_markup'] = json_encode($keyboard);
+                } else {
+                    // Если передали просто массив кнопок, оборачиваем в inline_keyboard
+                    $messageData['reply_markup'] = json_encode(['inline_keyboard' => $keyboard]);
+                }
             }
 
             $response = $this->makeRequest('POST', '/sendMessage', $messageData);
