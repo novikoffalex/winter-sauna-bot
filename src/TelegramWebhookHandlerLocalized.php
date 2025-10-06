@@ -280,6 +280,10 @@ class TelegramWebhookHandlerLocalized
                     $this->cancelVoiceBooking($chatId);
                     break;
                 default:
+                    if (strpos($data, 'select_service_') === 0) {
+                        $this->handleSelectService($chatId, $data);
+                        break;
+                    }
                     $this->telegramService->sendMessage($chatId, $this->localization->t('unknown_action') . ": " . $data);
                     break;
         }
@@ -317,16 +321,19 @@ class TelegramWebhookHandlerLocalized
      */
     private function sendServicesInfo($chatId, $messageId = null)
     {
-        $message = $this->localization->getServicesMessage();
+        $data = $this->localization->getZimaData();
+        $services = $data['services'] ?? [];
 
-        $keyboard = [
-            'inline_keyboard' => [
-                [
-                    ['text' => '💆‍♀️ ' . $this->localization->t('massage'), 'callback_data' => 'book_massage'],
-                    ['text' => '🌿 ' . $this->localization->t('treatment'), 'callback_data' => 'book_treatment']
-                ]
-            ]
-        ];
+        $message = "🏊‍♀️ " . $this->localization->t('services') . ":\n\n";
+        $keyboard = ['inline_keyboard' => []];
+
+        foreach ($services as $service) {
+            $name = $service['name'];
+            $priceThb = $service['price'];
+            $callback = 'select_service_' . rawurlencode($name) . '_' . (int)$priceThb;
+            $buttonText = $name . ' — ' . $this->localization->formatPrice($priceThb);
+            $keyboard['inline_keyboard'][] = [ ['text' => $buttonText, 'callback_data' => $callback] ];
+        }
 
         $this->telegramService->sendMessageWithKeyboard($chatId, $message, $keyboard, $messageId);
     }
@@ -452,6 +459,43 @@ class TelegramWebhookHandlerLocalized
         $message .= $this->localization->t('ticket_created') . "! " . $this->localization->t('if_questions_contact');
         
         $this->telegramService->sendMessage($chatId, $message, $messageId);
+    }
+
+    /**
+     * Обработка выбора услуги: select_service_{name}_{priceThb}
+     */
+    private function handleSelectService($chatId, $data)
+    {
+        // Разбираем callback_data
+        // Пример: select_service_%D0%90%D0%BB%D0%BE%D1%8D%20%D0%92%D0%B5%D1%80%D0%B0%20%D0%BB%D0%B5%D1%87%D0%B5%D0%BD%D0%B8%D0%B5_750
+        $payload = substr($data, strlen('select_service_'));
+        $parts = explode('_', $payload);
+        $priceThb = (float)array_pop($parts);
+        $encodedName = implode('_', $parts);
+        $serviceName = rawurldecode($encodedName);
+
+        require_once 'CurrencyService.php';
+        require_once 'PaymentHandler.php';
+
+        // Конвертируем THB -> USD
+        $fx = new CurrencyService();
+        $amountUsd = $fx->convertThbToUsd($priceThb);
+
+        // Создаем инвойс
+        $paymentHandler = new PaymentHandler($this->localization->getLanguage());
+        $result = $paymentHandler->createPaymentInvoice($chatId, $serviceName, $amountUsd, 'USDTTRC20');
+
+        if (!empty($result['success'])) {
+            $text = "💳 **" . $this->localization->t('crypto_payment') . "**\n\n";
+            $text .= "🏊‍♀️ **" . $this->localization->t('service') . ":** {$serviceName}\n";
+            $text .= "💰 **" . $this->localization->t('amount') . ":** {$amountUsd} USD (≈ {$priceThb} THB)\n\n";
+            $text .= "⏰ " . $this->localization->t('payment_expires_in') . ": 15 минут";
+
+            $kb = [ 'inline_keyboard' => [ [ ['text' => '🌐 ' . $this->localization->t('open_payment'), 'url' => $result['pay_url'] ] ] ] ];
+            $this->telegramService->sendMessageWithKeyboard($chatId, $text, $kb);
+        } else {
+            $this->telegramService->sendMessage($chatId, "❌ " . $this->localization->t('payment_failed') . "\n\n" . ($result['error'] ?? '')); 
+        }
     }
 
     /**
@@ -591,10 +635,10 @@ class TelegramWebhookHandlerLocalized
         
         // Получаем цену услуги (примерные цены)
         $prices = [
-            'massage' => 15,    // Минимум 11.72 USDT
-            'treatment' => 25,  // Минимум 11.72 USDT
-            'spa' => 30,        // Минимум 11.72 USDT
-            'wellness' => 35    // Минимум 11.72 USDT
+            'massage' => 15,
+            'treatment' => 25,
+            'spa' => 30,
+            'wellness' => 35
         ];
         
         $amount = $prices[$service] ?? 50;
