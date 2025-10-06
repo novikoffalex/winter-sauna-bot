@@ -143,7 +143,7 @@ class TranscriptionService
      */
     private function detectBookingIntent($text, $userLanguage)
     {
-        $textLower = mb_strtolower($text, 'UTF-8');
+        $textLower = strtolower($text);
         
         // Ключевые слова для бронирования
         $bookingKeywords = [
@@ -182,7 +182,7 @@ class TranscriptionService
         // Проверяем ключевые слова бронирования
         $keywords = $bookingKeywords[$userLanguage] ?? $bookingKeywords['en'];
         foreach ($keywords as $keyword) {
-            if (mb_strpos($textLower, $keyword) !== false) {
+            if (strpos($textLower, $keyword) !== false) {
                 $isBooking = true;
                 $confidence += 0.3;
                 break;
@@ -192,7 +192,7 @@ class TranscriptionService
         // Определяем услугу
         $serviceKeywordsLang = $serviceKeywords[$userLanguage] ?? $serviceKeywords['en'];
         foreach ($serviceKeywordsLang as $keyword => $serviceKey) {
-            if (mb_strpos($textLower, $keyword) !== false) {
+            if (strpos($textLower, $keyword) !== false) {
                 $service = $serviceKey;
                 $confidence += 0.2;
                 break;
@@ -202,7 +202,7 @@ class TranscriptionService
         // Определяем время
         $timeKeywordsLang = $timeKeywords[$userLanguage] ?? $timeKeywords['en'];
         foreach ($timeKeywordsLang as $keyword) {
-            if (mb_strpos($textLower, $keyword) !== false) {
+            if (strpos($textLower, $keyword) !== false) {
                 $date = $this->extractDate($text, $userLanguage);
                 $time = $this->extractTime($text, $userLanguage);
                 $confidence += 0.2;
@@ -232,17 +232,17 @@ class TranscriptionService
      */
     private function extractDate($text, $userLanguage)
     {
-        $textLower = mb_strtolower($text, 'UTF-8');
+        $textLower = strtolower($text);
         
-        if (mb_strpos($textLower, 'завтра') !== false || strpos($textLower, 'tomorrow') !== false) {
+        if (strpos($textLower, 'завтра') !== false || strpos($textLower, 'tomorrow') !== false) {
             return date('Y-m-d', strtotime('+1 day'));
         }
         
-        if (mb_strpos($textLower, 'послезавтра') !== false || strpos($textLower, 'day after tomorrow') !== false) {
+        if (strpos($textLower, 'послезавтра') !== false || strpos($textLower, 'day after tomorrow') !== false) {
             return date('Y-m-d', strtotime('+2 days'));
         }
         
-        if (mb_strpos($textLower, 'сегодня') !== false || strpos($textLower, 'today') !== false) {
+        if (strpos($textLower, 'сегодня') !== false || strpos($textLower, 'today') !== false) {
             return date('Y-m-d');
         }
 
@@ -278,7 +278,7 @@ class TranscriptionService
         }
 
         // Поиск времени словами
-        $textLower = mb_strtolower($text, 'UTF-8');
+        $textLower = strtolower($text);
         
         $timeMap = [
             'ru' => [
@@ -297,7 +297,7 @@ class TranscriptionService
 
         $timeMapLang = $timeMap[$userLanguage] ?? $timeMap['en'];
         foreach ($timeMapLang as $keyword => $time) {
-            if (mb_strpos($textLower, $keyword) !== false) {
+            if (strpos($textLower, $keyword) !== false) {
                 return $time;
             }
         }
