@@ -31,7 +31,7 @@ class CryptoPaymentService
             throw new Exception("Currency $currency is not supported. Please try BTC or another available currency.");
         }
 
-        $url = $this->baseUrl . '/v1/invoice';
+        $url = $this->baseUrl . '/v1/payment';
         
         $data = [
             'price_amount' => $amount,
