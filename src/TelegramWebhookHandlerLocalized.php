@@ -232,6 +232,13 @@ class TelegramWebhookHandlerLocalized
 
         error_log("Processing callback query from chat {$chatId} in language {$userLanguage}: {$data}");
 
+        // Обработка тестовой отметки об оплате до switch
+        if (strpos($data, 'mark_paid_test_') === 0) {
+            $service = substr($data, strlen('mark_paid_test_')) ?: 'test';
+            $this->simulateTestPayment($chatId, $service);
+            return;
+        }
+
         // Обрабатываем данные кнопки
         switch ($data) {
             case 'book_massage':
@@ -267,13 +274,6 @@ class TelegramWebhookHandlerLocalized
                 case 'crypto_payment_test':
                     $this->handleCryptoPayment($chatId, 'test');
                     break;
-                default:
-                    // Обработка тестовой отметки об оплате: mark_paid_test_{service}
-                    if (strpos($data, 'mark_paid_test_') === 0) {
-                        $service = substr($data, strlen('mark_paid_test_')) ?: 'test';
-                        $this->simulateTestPayment($chatId, $service);
-                        break;
-                    }
                 case 'voice_booking_info':
                     $this->sendVoiceBookingInfo($chatId);
                     break;
