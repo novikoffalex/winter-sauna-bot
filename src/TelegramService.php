@@ -245,6 +245,20 @@ class TelegramService
     }
 
     /**
+     * Получение информации о файле
+     */
+    public function getFile($fileId)
+    {
+        try {
+            $response = $this->makeRequest('GET', '/getFile', ['file_id' => $fileId]);
+            return $response;
+        } catch (Exception $e) {
+            error_log('Failed to get file: ' . $e->getMessage());
+            throw $e;
+        }
+    }
+
+    /**
      * Выполнение HTTP запроса
      */
     private function makeRequest($method, $endpoint, $data = [])

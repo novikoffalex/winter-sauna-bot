@@ -6,6 +6,7 @@
 require_once 'TelegramService.php';
 require_once 'AIServiceLocalized.php';
 require_once 'LocalizationService.php';
+require_once 'TranscriptionService.php';
 
 class TelegramWebhookHandlerLocalized
 {
@@ -78,6 +79,12 @@ class TelegramWebhookHandlerLocalized
 
         error_log("Processing message from chat {$chatId} in language {$userLanguage}: {$text}");
         error_log("Localization language: " . $this->localization->getLanguage());
+
+        // Обработка голосовых сообщений
+        if (isset($message['voice'])) {
+            $this->handleVoiceMessage($chatId, $message['voice'], $messageId, $from);
+            return;
+        }
 
         // Обработка команд
         if (strpos($text, '/') === 0) {
@@ -251,12 +258,24 @@ class TelegramWebhookHandlerLocalized
             case 'crypto_payment_spa':
                 $this->handleCryptoPayment($chatId, 'spa');
                 break;
-            case 'crypto_payment_wellness':
-                $this->handleCryptoPayment($chatId, 'wellness');
-                break;
-            default:
-                $this->telegramService->sendMessage($chatId, $this->localization->t('unknown_action') . ": " . $data);
-                break;
+                case 'crypto_payment_wellness':
+                    $this->handleCryptoPayment($chatId, 'wellness');
+                    break;
+                case 'voice_booking_info':
+                    $this->sendVoiceBookingInfo($chatId);
+                    break;
+                case 'confirm_voice_booking':
+                    $this->confirmVoiceBooking($chatId);
+                    break;
+                case 'edit_voice_booking':
+                    $this->editVoiceBooking($chatId);
+                    break;
+                case 'cancel_voice_booking':
+                    $this->cancelVoiceBooking($chatId);
+                    break;
+                default:
+                    $this->telegramService->sendMessage($chatId, $this->localization->t('unknown_action') . ": " . $data);
+                    break;
         }
     }
 
@@ -275,6 +294,9 @@ class TelegramWebhookHandlerLocalized
                 ],
                 [
                     ['text' => '📅 ' . $this->localization->t('book_now'), 'callback_data' => 'start_booking'],
+                    ['text' => '🎤 ' . $this->localization->t('voice_booking'), 'callback_data' => 'voice_booking_info']
+                ],
+                [
                     ['text' => '📍 ' . $this->localization->t('contact_info'), 'callback_data' => 'show_contacts']
                 ]
             ]
@@ -414,6 +436,135 @@ class TelegramWebhookHandlerLocalized
         $message .= $this->localization->t('ticket_created') . "! " . $this->localization->t('if_questions_contact');
         
         $this->telegramService->sendMessage($chatId, $message, $messageId);
+    }
+
+    /**
+     * Обработка голосового сообщения
+     */
+    private function handleVoiceMessage($chatId, $voice, $messageId, $from)
+    {
+        $userLanguage = $this->detectUserLanguage($from);
+        $this->localization = new LocalizationService($userLanguage);
+        
+        try {
+            // Отправляем сообщение о начале обработки
+            $this->telegramService->sendMessage(
+                $chatId, 
+                "🎤 " . $this->localization->t('processing_voice') . "...",
+                $messageId
+            );
+
+            // Создаем сервис транскрибации
+            $transcriptionService = new TranscriptionService();
+            
+            // Получаем и транскрибируем аудио
+            $audioData = $transcriptionService->getVoiceFile($voice['file_id']);
+            $transcription = $transcriptionService->transcribeAudio($audioData, $userLanguage);
+            
+            if (empty($transcription)) {
+                $this->telegramService->sendMessage(
+                    $chatId,
+                    "❌ " . $this->localization->t('transcription_failed'),
+                    $messageId
+                );
+                return;
+            }
+
+            // Анализируем транскрипцию
+            $analysis = $transcriptionService->analyzeTranscription($transcription, $userLanguage);
+            
+            // Отправляем результат транскрипции
+            $this->telegramService->sendMessage(
+                $chatId,
+                "📝 " . $this->localization->t('transcription') . ": " . $transcription,
+                $messageId
+            );
+
+            // Если это бронирование, обрабатываем его
+            if ($analysis['is_booking']) {
+                $this->handleVoiceBooking($chatId, $analysis, $messageId);
+            } else {
+                // Иначе обрабатываем как обычное сообщение
+                $this->handleAIMessage($chatId, $transcription, $messageId, $from);
+            }
+
+        } catch (Exception $e) {
+            error_log("Voice message processing error: " . $e->getMessage());
+            $this->telegramService->sendMessage(
+                $chatId,
+                "❌ " . $this->localization->t('voice_processing_error'),
+                $messageId
+            );
+        }
+    }
+
+    /**
+     * Обработка бронирования по голосовому сообщению
+     */
+    private function handleVoiceBooking($chatId, $analysis, $messageId)
+    {
+        $formattedResult = (new TranscriptionService())->formatBookingResult($analysis, $this->localization->getLanguage());
+        
+        if ($formattedResult) {
+            // Создаем кнопки для подтверждения/изменения
+            $keyboard = [
+                [
+                    ['text' => '✅ ' . $this->localization->t('confirm_booking'), 'callback_data' => 'confirm_voice_booking'],
+                    ['text' => '✏️ ' . $this->localization->t('edit_booking'), 'callback_data' => 'edit_voice_booking']
+                ],
+                [
+                    ['text' => '❌ ' . $this->localization->t('cancel_booking'), 'callback_data' => 'cancel_voice_booking']
+                ]
+            ];
+            
+            $this->telegramService->sendMessageWithKeyboard($chatId, $formattedResult, $keyboard, $messageId);
+        }
+    }
+
+    /**
+     * Отправка информации о голосовом бронировании
+     */
+    private function sendVoiceBookingInfo($chatId)
+    {
+        $message = "🎤 **" . $this->localization->t('voice_booking') . "**\n\n";
+        $message .= $this->localization->t('speak_booking') . "!\n\n";
+        $message .= "💡 **" . $this->localization->t('voice_instructions') . "**\n\n";
+        $message .= "🔊 " . $this->localization->t('just_send_voice') . "!";
+        
+        $this->telegramService->sendMessage($chatId, $message);
+    }
+
+    /**
+     * Подтверждение голосового бронирования
+     */
+    private function confirmVoiceBooking($chatId)
+    {
+        $message = "✅ **" . $this->localization->t('booking_confirmed') . "!**\n\n";
+        $message .= $this->localization->t('booking_details_sent') . "! " . $this->localization->t('if_questions_contact');
+        
+        $this->telegramService->sendMessage($chatId, $message);
+    }
+
+    /**
+     * Редактирование голосового бронирования
+     */
+    private function editVoiceBooking($chatId)
+    {
+        $message = "✏️ **" . $this->localization->t('edit_booking') . "**\n\n";
+        $message .= $this->localization->t('send_new_voice') . " " . $this->localization->t('voice_instructions');
+        
+        $this->telegramService->sendMessage($chatId, $message);
+    }
+
+    /**
+     * Отмена голосового бронирования
+     */
+    private function cancelVoiceBooking($chatId)
+    {
+        $message = "❌ **" . $this->localization->t('booking_cancelled') . "**\n\n";
+        $message .= $this->localization->t('can_book_again') . "!";
+        
+        $this->telegramService->sendMessage($chatId, $message);
     }
 
     /**
