@@ -8,8 +8,8 @@ require_once 'config/config.php';
 
 // Если это POST запрос, обрабатываем webhook
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    require_once 'src/TelegramWebhookHandler.php';
-    $handler = new TelegramWebhookHandler();
+    require_once 'src/TelegramWebhookHandlerLocalized.php';
+    $handler = new TelegramWebhookHandlerLocalized();
     $handler->handleWebhook();
     exit;
 }
