@@ -92,7 +92,13 @@ class PaymentHandler
     public function handleSuccessfulPayment($paymentData)
     {
         try {
-            $orderInfo = $this->getOrderInfo($paymentData['payload']['order_id']);
+            // Извлекаем order_id из возможных полей IPN
+            $ipnOrderId = $paymentData['payload']['order_id'] ?? ($paymentData['order_id'] ?? ($paymentData['order']['id'] ?? null));
+            if (!$ipnOrderId) {
+                throw new Exception('order_id not found in IPN');
+            }
+            error_log('PaymentHandler: resolved order_id from IPN: ' . $ipnOrderId);
+            $orderInfo = $this->getOrderInfo($ipnOrderId);
             
             if (!$orderInfo) {
                 throw new Exception('Order not found');

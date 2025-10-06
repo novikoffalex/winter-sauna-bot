@@ -37,7 +37,9 @@ error_log("CryptoPay webhook received: " . json_encode($data));
 try {
     // NOWPayments отправляет данные в формате payment
     if (isset($data['payment_id']) && isset($data['payment_status'])) {
-        $orderId = $data['order_id'];
+        // NOWPayments может прислать order_id в разных местах
+        $orderId = $data['order_id'] ?? ($data['payload']['order_id'] ?? ($data['order']['id'] ?? null));
+        error_log("NOWPayments webhook order_id detected: " . json_encode($orderId));
         $status = $data['payment_status'];
         
         if ($status === 'finished') {
