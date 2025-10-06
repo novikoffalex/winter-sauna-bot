@@ -7,7 +7,7 @@
     "working_hours": "10:00-22:00",
     "services": [
         {
-            "name_ru": "2 Session – Full-Body Steaming (Both Sides)",
+            "name_ru": "2 сессии — Парение всего тела (обе стороны)",
             "name_en": "2 Session – Full-Body Steaming (Both Sides)",
             "description_ru": "Полное парение тела с обеих сторон в течение 2 сессий",
             "description_en": "Full-body steaming on both sides for 2 sessions",
@@ -17,7 +17,7 @@
             "category": "steaming"
         },
         {
-            "name_ru": "1 Session – Full-Body Steaming (Both Sides) in Private sauna room",
+            "name_ru": "1 сессия — Парение всего тела (обе стороны) в приватной сауне",
             "name_en": "1 Session – Full-Body Steaming (Both Sides) in Private sauna room",
             "description_ru": "Полное парение тела с обеих сторон в приватной сауне",
             "description_en": "Full-body steaming on both sides in private sauna room",
@@ -27,7 +27,7 @@
             "category": "steaming"
         },
         {
-            "name_ru": "Full-Body Steaming (Both Sides) in Main Sauna room",
+            "name_ru": "Парение всего тела (обе стороны) в основной сауне",
             "name_en": "Full-Body Steaming (Both Sides) in Main Sauna room",
             "description_ru": "Полное парение тела с обеих сторон в основной сауне",
             "description_en": "Full-body steaming on both sides in main sauna room",
@@ -37,7 +37,7 @@
             "category": "steaming"
         },
         {
-            "name_ru": "Aroma steaming in private room",
+            "name_ru": "Арома‑парение в приватной комнате",
             "name_en": "Aroma steaming in private room",
             "description_ru": "Арома-парение - мягкое ароматное парение в индивидуальной комнате",
             "description_en": "Aroma steaming - gentle aromatic steaming in private room",
@@ -47,7 +47,7 @@
             "category": "steaming"
         },
         {
-            "name_ru": "Steelworker's Steaming",
+            "name_ru": "Парение «Сталевара»",
             "name_en": "Steelworker's Steaming",
             "description_ru": "Интенсивное парение для глубокого прогрева",
             "description_en": "Intensive steaming for deep heating",
@@ -57,7 +57,7 @@
             "category": "steaming"
         },
         {
-            "name_ru": "1 Session – Back Steaming (one side)",
+            "name_ru": "1 сессия — Парение спины (одна сторона)",
             "name_en": "1 Session – Back Steaming (one side)",
             "description_ru": "Постепенное прогревание от ног до головы с повышением температуры",
             "description_en": "Gradual warming from feet to head with increasing temperature",
@@ -67,7 +67,7 @@
             "category": "steaming"
         },
         {
-            "name_ru": "Hot Oil Massage 1 Hour",
+            "name_ru": "Горячий масляный массаж 1 час",
             "name_en": "Hot Oil Massage 1 Hour",
             "description_ru": "Терапевтический массаж тела, сочетающий преимущества массажа с целебными свойствами нагретых масел",
             "description_en": "A therapeutic bodywork treatment that combines the benefits of massage with the therapeutic properties of warmed oils",
@@ -77,7 +77,7 @@
             "category": "massage"
         },
         {
-            "name_ru": "Thai oil massage 1 Hour",
+            "name_ru": "Тайский масляный массаж 1 час",
             "name_en": "Thai oil massage 1 Hour",
             "description_ru": "Сочетает традиционный тайский массаж с техниками акупрессуры, растяжки и скручивания",
             "description_en": "Combines traditional Thai massage, using acupressure, stretching and twisting techniques",
@@ -87,7 +87,7 @@
             "category": "massage"
         },
         {
-            "name_ru": "Office Syndrome Massage 1 hour",
+            "name_ru": "Массаж офисного синдрома 1 час",
             "name_en": "Office Syndrome Massage 1 hour",
             "description_ru": "С маслом и тайским горячим травяным бальзамом. Фокус на спине, шее и плечах",
             "description_en": "With oil and Thai hot herbal balm. Focus on the back, neck and shoulders",
@@ -97,7 +97,7 @@
             "category": "massage"
         },
         {
-            "name_ru": "Deep Tissue Massage 1 Hour",
+            "name_ru": "Глубокий тканевый массаж 1 час",
             "name_en": "Deep Tissue Massage 1 Hour",
             "description_ru": "Массаж глубоко в мышечный слой, снимая узлы, накопленные от стресса и перенапряжения",
             "description_en": "Massage deep into the muscle layer, releasing knots accumulated from stress and overuse",
@@ -107,7 +107,7 @@
             "category": "massage"
         },
         {
-            "name_ru": "Aloe Vera Treatment 1 Hour",
+            "name_ru": "Лечение Алоэ Вера 1 час",
             "name_en": "Aloe Vera Treatment 1 Hour",
             "description_ru": "Лечит, увлажняет и укрепляет кожу. Приносит комфорт и расслабление",
             "description_en": "Heals, moisturizes and strengthens the skin. Brings comfort and relaxation",
@@ -117,7 +117,7 @@
             "category": "treatment"
         },
         {
-            "name_ru": "Traditional Thai Massage 1 Hour",
+            "name_ru": "Традиционный тайский массаж 1 час",
             "name_en": "Traditional Thai Massage 1 Hour",
             "description_ru": "Расслабьтесь с древней наукой, помогите расслабить мышцы, снять боли, стимулировать кровообращение",
             "description_en": "Relax with ancient science, help relax muscles, relieve aches and pains, stimulate blood circulation",
@@ -127,7 +127,7 @@
             "category": "massage"
         },
         {
-            "name_ru": "Aromatherapy massage",
+            "name_ru": "Ароматерапевтический массаж",
             "name_en": "Aromatherapy massage",
             "description_ru": "Ощутите расслабление в каждом массаже. Снизьте стресс, снимите усталость с натуральными эфирными маслами",
             "description_en": "Experience relaxation in every massage. Reduce stress, relieve fatigue with natural essential oils",
