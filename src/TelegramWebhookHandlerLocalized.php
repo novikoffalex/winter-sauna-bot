@@ -232,12 +232,7 @@ class TelegramWebhookHandlerLocalized
 
         error_log("Processing callback query from chat {$chatId} in language {$userLanguage}: {$data}");
 
-        // Обработка тестовой отметки об оплате до switch
-        if (strpos($data, 'mark_paid_test_') === 0) {
-            $service = substr($data, strlen('mark_paid_test_')) ?: 'test';
-            $this->simulateTestPayment($chatId, $service);
-            return;
-        }
+        // Удалено: обработка тестовой отметки об оплате
 
         // Обрабатываем данные кнопки
         switch ($data) {
@@ -271,9 +266,7 @@ class TelegramWebhookHandlerLocalized
                 case 'crypto_payment_wellness':
                     $this->handleCryptoPayment($chatId, 'wellness');
                     break;
-                case 'crypto_payment_test':
-                    $this->handleCryptoPayment($chatId, 'test');
-                    break;
+                // Удалено: тестовая оплата
                 case 'voice_booking_info':
                     $this->sendVoiceBookingInfo($chatId);
                     break;
@@ -309,9 +302,7 @@ class TelegramWebhookHandlerLocalized
                     ['text' => '📅 ' . $this->localization->t('book_now'), 'callback_data' => 'start_booking'],
                     ['text' => '🎤 ' . $this->localization->t('voice_booking'), 'callback_data' => 'voice_booking_info']
                 ],
-                [
-                    ['text' => '🧪 Тест оплаты (1 USDT)', 'callback_data' => 'crypto_payment_test']
-                ],
+                // Удалено: кнопка тестовой оплаты
                 [
                     ['text' => '📍 ' . $this->localization->t('contact_info'), 'callback_data' => 'show_contacts']
                 ]
@@ -466,28 +457,7 @@ class TelegramWebhookHandlerLocalized
     /**
      * Симуляция успешной оплаты (тестовая отметка)
      */
-    private function simulateTestPayment($chatId, $service)
-    {
-        require_once 'PaymentHandler.php';
-        require_once 'TicketService.php';
-
-        $paymentHandler = new PaymentHandler($this->localization->getLanguage());
-        $ticketService = new TicketService();
-
-        // Создаем тестовый заказ
-        $orderId = 'ORDER-TEST-' . time();
-        $amount = 15;
-        $currency = 'USDT';
-        $invoiceId = 'TEST-INV-' . time();
-
-        $paymentHandler->saveOrderInfo($orderId, $chatId, $service, $amount, $currency, $invoiceId);
-        $paymentHandler->updateOrderStatus($orderId, 'paid');
-
-        // Создаем билет и отправляем
-        $ticketData = $ticketService->createTicket($orderId, $service, $amount, $currency, ['id' => $invoiceId]);
-        $qrData = $ticketService->generateTicketQR($ticketData);
-        $paymentHandler->sendTicketToUser($chatId, $ticketData, $qrData);
-    }
+    // Удалено: simulateTestPayment
 
     /**
      * Обработка голосового сообщения
@@ -624,8 +594,7 @@ class TelegramWebhookHandlerLocalized
             'massage' => 15,    // Минимум 11.72 USDT
             'treatment' => 25,  // Минимум 11.72 USDT
             'spa' => 30,        // Минимум 11.72 USDT
-            'wellness' => 35,   // Минимум 11.72 USDT
-            'test' => 15        // Тестовая оплата 15 USDT
+            'wellness' => 35    // Минимум 11.72 USDT
         ];
         
         $amount = $prices[$service] ?? 50;
@@ -642,8 +611,7 @@ class TelegramWebhookHandlerLocalized
             $keyboard = [
                 'inline_keyboard' => [
                     [
-                        ['text' => '🌐 ' . $this->localization->t('open_payment'), 'url' => $result['pay_url']],
-                        ['text' => '✅ ' . $this->localization->t('mark_paid_test'), 'callback_data' => 'mark_paid_test_' . $service]
+                        ['text' => '🌐 ' . $this->localization->t('open_payment'), 'url' => $result['pay_url']]
                     ]
                 ]
             ];
