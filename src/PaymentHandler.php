@@ -52,11 +52,11 @@ class PaymentHandler
             $this->saveOrderInfo($orderId, $chatId, $service, $amount, $currency, $invoiceId);
 
             // Парсим ответ от NOWPayments
-            $invoiceId = $invoice['payment_id'] ?? $invoice['invoice_id'] ?? $invoice['id'] ?? 'unknown';
+            $invoiceId = $invoice['id'] ?? $invoice['payment_id'] ?? $invoice['invoice_id'] ?? 'unknown';
             $payAddress = $invoice['pay_address'] ?? '';
             $payUrl = $invoice['invoice_url'] ?? $invoice['pay_url'] ?? $invoice['payment_url'] ?? $invoice['checkout_url'] ?? $invoice['url'] ?? '';
             
-            // Если нет URL, но есть payment_id, создаем ссылку на NOWPayments hosted page
+            // Если нет URL, но есть invoice_id, создаем ссылку на NOWPayments hosted page
             if (empty($payUrl) && !empty($invoiceId)) {
                 $payUrl = "https://nowpayments.io/payment?iid={$invoiceId}";
             }
