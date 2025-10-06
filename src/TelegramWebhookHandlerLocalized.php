@@ -590,13 +590,13 @@ class TelegramWebhookHandlerLocalized
         
         $amount = $prices[$service] ?? 50;
         
-        // Создаем инвойс (используем BTC вместо USDT)
-        $result = $paymentHandler->createPaymentInvoice($chatId, $service, $amount, 'BTC');
+        // Создаем инвойс (используем USDT TRC20)
+        $result = $paymentHandler->createPaymentInvoice($chatId, $service, $amount, 'USDT');
         
         if ($result['success']) {
             $message = "💳 **" . $this->localization->t('crypto_payment') . "**\n\n";
             $message .= "🏊‍♀️ **" . $this->localization->t('service') . ":** {$service}\n";
-            $message .= "💰 **" . $this->localization->t('amount') . ":** {$amount} USD (BTC)\n\n";
+            $message .= "💰 **" . $this->localization->t('amount') . ":** {$amount} USDT\n\n";
             $message .= "🔗 **" . $this->localization->t('pay_url') . ":**\n";
             $message .= $result['pay_url'] . "\n\n";
             $message .= "⏰ " . $this->localization->t('payment_expires_in') . ": 15 минут";
