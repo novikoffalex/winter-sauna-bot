@@ -250,8 +250,40 @@ class TelegramService
     public function getFile($fileId)
     {
         try {
-            $response = $this->makeRequest('GET', '/getFile', ['file_id' => $fileId]);
-            return $response;
+            $url = $this->baseUrl . '/getFile?file_id=' . urlencode($fileId);
+            
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'User-Agent: Zima-Sauna-Bot/1.0'
+            ]);
+
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $error = curl_error($ch);
+            curl_close($ch);
+
+            if ($error) {
+                throw new Exception("cURL error: $error");
+            }
+
+            if ($httpCode >= 400) {
+                throw new Exception("HTTP error $httpCode: $response");
+            }
+
+            $decoded = json_decode($response, true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new Exception("Invalid JSON response: $response");
+            }
+
+            if (!$decoded['ok']) {
+                throw new Exception("Telegram API error: " . ($decoded['description'] ?? 'Unknown error'));
+            }
+
+            return $decoded['result'];
+
         } catch (Exception $e) {
             error_log('Failed to get file: ' . $e->getMessage());
             throw $e;

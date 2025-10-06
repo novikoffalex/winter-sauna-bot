@@ -23,21 +23,28 @@ class TranscriptionService
     public function getVoiceFile($fileId)
     {
         try {
+            error_log("Getting voice file with ID: " . $fileId);
+            
             // Получаем информацию о файле
             $fileInfo = $this->telegramService->getFile($fileId);
             
+            error_log("File info received: " . json_encode($fileInfo));
+            
             if (!$fileInfo || !isset($fileInfo['file_path'])) {
-                throw new Exception('File not found');
+                throw new Exception('File not found or invalid file info');
             }
 
             // Скачиваем файл
             $fileUrl = 'https://api.telegram.org/file/bot' . TELEGRAM_BOT_TOKEN . '/' . $fileInfo['file_path'];
+            error_log("Downloading file from: " . $fileUrl);
+            
             $audioData = file_get_contents($fileUrl);
             
             if (!$audioData) {
-                throw new Exception('Failed to download audio file');
+                throw new Exception('Failed to download audio file from: ' . $fileUrl);
             }
 
+            error_log("Audio file downloaded successfully, size: " . strlen($audioData) . " bytes");
             return $audioData;
 
         } catch (Exception $e) {
