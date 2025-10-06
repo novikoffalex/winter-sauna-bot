@@ -56,9 +56,9 @@ class PaymentHandler
             $payAddress = $invoice['pay_address'] ?? '';
             $payUrl = $invoice['invoice_url'] ?? $invoice['pay_url'] ?? $invoice['payment_url'] ?? $invoice['checkout_url'] ?? $invoice['url'] ?? '';
             
-            // Если нет URL, но есть адрес, создаем ссылку на блокчейн эксплорер
-            if (empty($payUrl) && !empty($payAddress)) {
-                $payUrl = "https://tronscan.org/#/address/{$payAddress}";
+            // Если нет URL, но есть payment_id, создаем ссылку на NOWPayments hosted page
+            if (empty($payUrl) && !empty($invoiceId)) {
+                $payUrl = "https://nowpayments.io/payment?iid={$invoiceId}";
             }
             
             error_log("Parsed invoice data: " . json_encode([
