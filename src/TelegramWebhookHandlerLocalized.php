@@ -182,6 +182,9 @@ class TelegramWebhookHandlerLocalized
     private function handleAIMessage($chatId, $text, $messageId, $from)
     {
         try {
+            // Показываем статус "печатает"
+            $this->telegramService->sendTypingAction($chatId);
+            
             $context = [
                 'senderId' => $from['id'],
                 'firstName' => $from['first_name'] ?? '',
@@ -447,6 +450,8 @@ class TelegramWebhookHandlerLocalized
         $this->localization = new LocalizationService($userLanguage);
         
         try {
+            // Показываем статус "печатает"
+            $this->telegramService->sendTypingAction($chatId);
 
             // Создаем сервис транскрибации
             $transcriptionService = new TranscriptionService();
@@ -559,6 +564,9 @@ class TelegramWebhookHandlerLocalized
      */
     private function handleCryptoPayment($chatId, $service, $messageId = null)
     {
+        // Показываем статус "печатает"
+        $this->telegramService->sendTypingAction($chatId);
+        
         require_once 'PaymentHandler.php';
         
         $paymentHandler = new PaymentHandler($this->localization->getLanguage());

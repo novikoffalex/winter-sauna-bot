@@ -291,6 +291,23 @@ class TelegramService
     }
 
     /**
+     * Отправка статуса "печатает"
+     */
+    public function sendTypingAction($chatId)
+    {
+        try {
+            $data = [
+                'chat_id' => $chatId,
+                'action' => 'typing'
+            ];
+            
+            $this->makeRequest('POST', '/sendChatAction', $data);
+        } catch (Exception $e) {
+            error_log('Failed to send typing action: ' . $e->getMessage());
+        }
+    }
+
+    /**
      * Выполнение HTTP запроса
      */
     private function makeRequest($method, $endpoint, $data = [])
