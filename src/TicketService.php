@@ -199,7 +199,7 @@ class TicketService
         try {
             // Используем Simple QR Code для генерации QR-кода
             $qrCode = new \SimpleSoftwareIO\QrCode\Generator();
-            $qrCode->size(300)->margin(10);
+            $qrCode->size(300)->margin(10)->format('png');
             
             // Сохраняем QR-код во временный файл
             $tempFile = 'data/qr_' . time() . '.png';
@@ -209,8 +209,9 @@ class TicketService
             
             $qrCode->generate($content, $tempFile);
             
-            // Возвращаем путь к файлу
-            return $tempFile;
+            // Возвращаем URL для доступа к файлу на Heroku
+            $baseUrl = 'https://winter-sauna-bot-phuket-f79605d5d044.herokuapp.com';
+            return $baseUrl . '/' . $tempFile;
             
         } catch (Exception $e) {
             error_log("QR generation error: " . $e->getMessage());
