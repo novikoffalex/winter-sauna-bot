@@ -12,9 +12,9 @@ class CryptoPaymentService
 
     public function __construct()
     {
-        $this->apiKey = CRYPTOPAY_API_KEY ?? '';
+        $this->apiKey = NOWPAYMENTS_API_KEY ?? '';
         $this->baseUrl = 'https://api.nowpayments.io/v1';
-        $this->webhookSecret = CRYPTOPAY_WEBHOOK_SECRET ?? '';
+        $this->webhookSecret = NOWPAYMENTS_WEBHOOK_SECRET ?? '';
     }
 
     /**
@@ -212,13 +212,13 @@ class CryptoPaymentService
         curl_close($ch);
 
         if ($error) {
-            error_log("CryptoPay cURL error: $error");
-            throw new Exception("CryptoPay API error: $error");
+            error_log("NOWPayments cURL error: $error");
+            throw new Exception("NOWPayments API error: $error");
         }
 
         if ($httpCode >= 400) {
-            error_log("CryptoPay HTTP error $httpCode: $response");
-            throw new Exception("CryptoPay API error $httpCode: $response");
+            error_log("NOWPayments HTTP error $httpCode: $response");
+            throw new Exception("NOWPayments API error $httpCode: $response");
         }
 
         $decoded = json_decode($response, true);
