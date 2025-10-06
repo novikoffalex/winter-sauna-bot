@@ -53,7 +53,7 @@ class PaymentHandler
 
             // Парсим ответ от NOWPayments
             $invoiceId = $invoice['invoice_id'] ?? $invoice['id'] ?? $invoice['payment_id'] ?? 'unknown';
-            $payUrl = $invoice['pay_url'] ?? $invoice['payment_url'] ?? $invoice['checkout_url'] ?? $invoice['url'] ?? '';
+            $payUrl = $invoice['invoice_url'] ?? $invoice['pay_url'] ?? $invoice['payment_url'] ?? $invoice['checkout_url'] ?? $invoice['url'] ?? '';
             
             error_log("Parsed invoice data: " . json_encode([
                 'invoice_id' => $invoiceId,
