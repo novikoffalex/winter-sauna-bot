@@ -128,7 +128,10 @@ class LocalizationService
                     'booking_details_sent' => 'Детали бронирования отправлены',
                     'booking_cancelled' => 'Бронирование отменено',
                     'can_book_again' => 'Можете забронировать снова',
-                    'send_new_voice' => 'Отправьте новое голосовое сообщение с изменениями'
+                    'send_new_voice' => 'Отправьте новое голосовое сообщение с изменениями',
+                    'booking_data_not_found' => 'Данные бронирования не найдены',
+                    'data_not_found' => 'Данные не найдены',
+                    'service_not_found' => 'Услуга не найдена'
             ],
             'en' => [
                 'welcome' => '🧖‍♀️ Welcome to Zima SPA Wellness!',
@@ -215,7 +218,10 @@ class LocalizationService
                     'booking_details_sent' => 'Booking details sent',
                     'booking_cancelled' => 'Booking cancelled',
                     'can_book_again' => 'You can book again',
-                    'send_new_voice' => 'Send a new voice message with changes'
+                    'send_new_voice' => 'Send a new voice message with changes',
+                    'booking_data_not_found' => 'Booking data not found',
+                    'data_not_found' => 'Data not found',
+                    'service_not_found' => 'Service not found'
             ]
         ];
     }
@@ -393,5 +399,20 @@ class LocalizationService
         }
         
         return $message;
+    }
+    
+    /**
+     * Получение перевода для ключа
+     */
+    public function t($key, $params = [])
+    {
+        $translation = $this->translations[$this->language][$key] ?? $this->translations['en'][$key] ?? $key;
+        
+        // Заменяем параметры
+        foreach ($params as $param => $value) {
+            $translation = str_replace('{' . $param . '}', $value, $translation);
+        }
+        
+        return $translation;
     }
 }

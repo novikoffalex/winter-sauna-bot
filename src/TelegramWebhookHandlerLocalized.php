@@ -575,6 +575,24 @@ class TelegramWebhookHandlerLocalized
         $formattedResult = (new TranscriptionService())->formatBookingResult($analysis, $this->localization->getLanguage());
         
         if ($formattedResult) {
+            // Сохраняем данные бронирования для последующего использования
+            $bookingData = [
+                'chat_id' => $chatId,
+                'service' => $analysis['service'] ?? 'massage',
+                'date' => $analysis['date'] ?? null,
+                'time' => $analysis['time'] ?? null,
+                'guests' => $analysis['guests'] ?? 1,
+                'created_at' => time(),
+                'language' => $this->localization->getLanguage()
+            ];
+            
+            // Сохраняем в файл
+            $bookingFile = 'data/voice_booking_' . $chatId . '.json';
+            if (!file_exists('data')) {
+                mkdir('data', 0755, true);
+            }
+            file_put_contents($bookingFile, json_encode($bookingData));
+            
             // Создаем кнопки для подтверждения/изменения
             $keyboard = [
                 [
@@ -608,10 +626,99 @@ class TelegramWebhookHandlerLocalized
      */
     private function confirmVoiceBooking($chatId)
     {
-        $message = "✅ **" . $this->localization->t('booking_confirmed') . "!**\n\n";
-        $message .= $this->localization->t('booking_details_sent') . "! " . $this->localization->t('if_questions_contact');
+        // Загружаем данные бронирования
+        $bookingFile = 'data/voice_booking_' . $chatId . '.json';
+        if (!file_exists($bookingFile)) {
+            $this->telegramService->sendMessage($chatId, "❌ " . $this->localization->t('booking_data_not_found'));
+            return;
+        }
         
-        $this->telegramService->sendMessage($chatId, $message);
+        $bookingData = json_decode(file_get_contents($bookingFile), true);
+        $service = $bookingData['service'] ?? 'massage';
+        
+        // Загружаем данные услуг для получения цены
+        $dataFile = 'zima_data.json';
+        if (!file_exists($dataFile)) {
+            $this->telegramService->sendMessage($chatId, "❌ " . $this->localization->t('data_not_found'));
+            return;
+        }
+        
+        $jsonData = json_decode(file_get_contents($dataFile), true);
+        $services = $jsonData['services'] ?? [];
+        
+        // Находим подходящую услугу
+        $selectedService = null;
+        foreach ($services as $serviceData) {
+            if (strpos(strtolower($serviceData['name_ru']), strtolower($service)) !== false || 
+                strpos(strtolower($serviceData['name_en']), strtolower($service)) !== false) {
+                $selectedService = $serviceData;
+                break;
+            }
+        }
+        
+        if (!$selectedService) {
+            // Если не найдена точная услуга, берем первую услугу массажа
+            foreach ($services as $serviceData) {
+                if ($serviceData['category'] === 'massage') {
+                    $selectedService = $serviceData;
+                    break;
+                }
+            }
+        }
+        
+        if (!$selectedService) {
+            $this->telegramService->sendMessage($chatId, "❌ " . $this->localization->t('service_not_found'));
+            return;
+        }
+        
+        $serviceName = $selectedService['name_' . $this->localization->getLanguage()] ?? $selectedService['name_ru'];
+        $priceThb = $selectedService['price'];
+        
+        // Конвертируем THB в USD
+        require_once 'CurrencyService.php';
+        require_once 'PaymentHandler.php';
+        
+        $currencyService = new CurrencyService();
+        $paymentHandler = new PaymentHandler($this->localization->getLanguage());
+        
+        try {
+            $usdAmount = $currencyService->convertThbToUsd($priceThb);
+            
+            if ($usdAmount < 15) {
+                $usdAmount = 15; // Минимальная сумма для NOWPayments
+            }
+            
+            // Создаем инвойс
+            $result = $paymentHandler->createPaymentInvoice($chatId, $serviceName, $usdAmount, 'USDTTRC20');
+            
+            if ($result['success']) {
+                $message = "✅ **" . $this->localization->t('booking_confirmed') . "!**\n\n";
+                $message .= "🏊‍♀️ **" . $this->localization->t('service') . ":** {$serviceName}\n";
+                $message .= "💰 **" . $this->localization->t('amount') . ":** {$usdAmount} USDT (≈ {$priceThb} THB)\n";
+                $message .= "👥 **" . $this->localization->t('guests') . ":** " . ($bookingData['guests'] ?? 1) . "\n\n";
+                $message .= "⏰ " . $this->localization->t('payment_expires_in') . ": 15 минут\n\n";
+                $message .= $this->localization->t('if_questions_contact');
+                
+                $keyboard = [
+                    'inline_keyboard' => [
+                        [
+                            ['text' => '🌐 ' . $this->localization->t('open_payment'), 'url' => $result['pay_url']]
+                        ]
+                    ]
+                ];
+                
+                $this->telegramService->sendMessageWithKeyboard($chatId, $message, $keyboard);
+                
+                // Удаляем временный файл бронирования
+                unlink($bookingFile);
+            } else {
+                $this->telegramService->sendMessage($chatId, "❌ " . $this->localization->t('payment_failed') . ": " . ($result['error'] ?? 'Unknown error'));
+            }
+            
+        } catch (Exception $e) {
+            error_log("Voice booking payment error: " . $e->getMessage());
+            $this->telegramService->sendMessage($chatId, "❌ " . $this->localization->t('processing_error') . ": " . $e->getMessage());
+        }
     }
 
     /**
