@@ -1,0 +1,14 @@
+{
+    "name": "winter-sauna/telegram-bot",
+    "description": "Winter Sauna Telegram Bot with OpenAI integration",
+    "type": "project",
+    "require": {
+        "php": ">=8.0"
+    },
+    "scripts": {
+        "start": "php -S 0.0.0.0:$PORT"
+    },
+    "config": {
+        "optimize-autoloader": true
+    }
+}

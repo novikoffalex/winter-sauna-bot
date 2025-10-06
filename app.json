@@ -1,0 +1,40 @@
+{
+  "name": "Winter Sauna Bot",
+  "description": "Telegram bot for Winter Sauna in Phuket",
+  "repository": "https://github.com/yourusername/winter-sauna-bot",
+  "logo": "https://cdn.jsdelivr.net/gh/heroku/node-js-getting-started/public/node.svg",
+  "keywords": ["telegram", "bot", "sauna", "phuket", "openai"],
+  "image": "heroku/php",
+  "stack": "heroku-22",
+  "addons": [],
+  "env": {
+    "TELEGRAM_BOT_TOKEN": {
+      "description": "Your Telegram Bot Token from BotFather",
+      "required": true
+    },
+    "OPENAI_API_KEY": {
+      "description": "Your OpenAI API Key",
+      "required": true
+    },
+    "OPENAI_MODEL": {
+      "description": "OpenAI model to use",
+      "value": "gpt-4"
+    },
+    "SAUNA_NAME": {
+      "description": "Name of the sauna",
+      "value": "Зима"
+    },
+    "SAUNA_LOCATION": {
+      "description": "Location of the sauna",
+      "value": "Пхукет, Таиланд"
+    },
+    "SAUNA_WORKING_HOURS": {
+      "description": "Working hours",
+      "value": "10:00-22:00"
+    },
+    "SAUNA_PHONE": {
+      "description": "Phone number",
+      "value": "+66-XX-XXX-XXXX"
+    }
+  }
+}
