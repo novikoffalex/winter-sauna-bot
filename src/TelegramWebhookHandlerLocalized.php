@@ -653,13 +653,50 @@ class TelegramWebhookHandlerLocalized
         $jsonData = json_decode(file_get_contents($dataFile), true);
         $services = $jsonData['services'] ?? [];
         
-        // Находим подходящую услугу
+        // Находим подходящую услугу с улучшенным поиском
         $selectedService = null;
+        $serviceLower = strtolower($service);
+        
+        // Сначала ищем точное совпадение
         foreach ($services as $serviceData) {
-            if (strpos(strtolower($serviceData['name_ru']), strtolower($service)) !== false || 
-                strpos(strtolower($serviceData['name_en']), strtolower($service)) !== false) {
+            $nameRu = strtolower($serviceData['name_ru']);
+            $nameEn = strtolower($serviceData['name_en']);
+            
+            if (strpos($nameRu, $serviceLower) !== false || 
+                strpos($nameEn, $serviceLower) !== false ||
+                strpos($serviceLower, $nameRu) !== false ||
+                strpos($serviceLower, $nameEn) !== false) {
                 $selectedService = $serviceData;
                 break;
+            }
+        }
+        
+        // Если не найдено, ищем по ключевым словам
+        if (!$selectedService) {
+            $keywords = [
+                'массаж' => 'massage',
+                'тайский' => 'thai',
+                'арома' => 'aroma',
+                'горячие камни' => 'hot stone',
+                'антицеллюлитный' => 'anti-cellulite',
+                'рефлексология' => 'reflexology',
+                'пилинг' => 'scrub',
+                'обертывание' => 'wrap',
+                'алоэ' => 'aloe',
+                'ароматерапия' => 'aromatherapy'
+            ];
+            
+            foreach ($services as $serviceData) {
+                $nameRu = strtolower($serviceData['name_ru']);
+                $nameEn = strtolower($serviceData['name_en']);
+                
+                foreach ($keywords as $ruKeyword => $enKeyword) {
+                    if ((strpos($serviceLower, $ruKeyword) !== false && strpos($nameRu, $ruKeyword) !== false) ||
+                        (strpos($serviceLower, $enKeyword) !== false && strpos($nameEn, $enKeyword) !== false)) {
+                        $selectedService = $serviceData;
+                        break 2;
+                    }
+                }
             }
         }
         
