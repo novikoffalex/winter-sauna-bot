@@ -1,0 +1,18 @@
+{
+    "name": "Зима",
+    "location": "83\/14 Moo 2, Wiset Rd, Rawai, Phuket 83100, Thailand",
+    "phone": "+66 81 234 5678",
+    "email": "info@zimasauna-phuket.com",
+    "facebook": "https:\/\/facebook.com\/zimasaunaphuket",
+    "instagram": "https:\/\/instagram.com\/zimasaunaphuket",
+    "whatsapp": "+66812345678",
+    "working_hours": "10:00-22:00",
+    "services": [
+        "Русская баня с паром",
+        "Финская сауна",
+        "Травяной пар",
+        "Ледяная ванна",
+        "Массаж и СПА процедуры",
+        "Зона отдыха с чаем"
+    ]
+}
