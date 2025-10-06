@@ -71,6 +71,7 @@ class TelegramWebhookHandlerLocalized
         $this->aiService->initialize();
 
         error_log("Processing message from chat {$chatId} in language {$userLanguage}: {$text}");
+        error_log("Localization language: " . $this->localization->getLanguage());
 
         // Обработка команд
         if (strpos($text, '/') === 0) {
@@ -87,22 +88,29 @@ class TelegramWebhookHandlerLocalized
      */
     private function detectUserLanguage($from)
     {
+        // Логируем информацию о пользователе для отладки
+        error_log("User data for language detection: " . json_encode($from));
+        
         // Проверяем language_code в настройках пользователя
         if (isset($from['language_code'])) {
             $langCode = $from['language_code'];
+            error_log("Detected language_code: " . $langCode);
             
             // Если русский язык
             if (strpos($langCode, 'ru') === 0) {
+                error_log("Language set to: ru");
                 return 'ru';
             }
             
             // Если английский язык
             if (strpos($langCode, 'en') === 0) {
+                error_log("Language set to: en");
                 return 'en';
             }
         }
         
         // По умолчанию английский (для международных туристов)
+        error_log("Language set to default: en");
         return 'en';
     }
 
