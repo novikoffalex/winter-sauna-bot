@@ -36,7 +36,7 @@ class CryptoPaymentService
         $data = [
             'price_amount' => $amount,
             'price_currency' => 'USD', // NOWPayments требует USD как базовую валюту
-            'pay_currency' => 'USDTTRC20', // Полное название валюты с сетью
+            'pay_currency' => 'USDTTRC20', // Tether USD на сети TRON
             'order_id' => $orderId,
             'order_description' => $description,
             'ipn_callback_url' => 'https://winter-sauna-bot-phuket-f79605d5d044.herokuapp.com/crypto-webhook.php',
