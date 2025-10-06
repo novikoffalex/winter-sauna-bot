@@ -130,6 +130,10 @@ class TelegramWebhookHandlerLocalized
                 $this->sendWelcomeMessage($chatId, $messageId);
                 break;
                 
+            case '/menu':
+                $this->sendWelcomeMessage($chatId, $messageId);
+                break;
+                
             case '/services':
                 $this->sendServicesInfo($chatId, $messageId);
                 break;
@@ -315,6 +319,7 @@ class TelegramWebhookHandlerLocalized
         $message = "❓ **" . $this->localization->t('help_text') . ":**\n\n";
         $message .= "**" . $this->localization->t('available_commands') . ":**\n";
         $message .= "/start - " . $this->localization->t('start_bot') . "\n";
+        $message .= "/menu - " . $this->localization->t('main_menu') . "\n";
         $message .= "/services - " . $this->localization->t('view_services') . "\n";
         $message .= "/booking - " . $this->localization->t('book_now') . "\n";
         $message .= "/prices - " . $this->localization->t('view_prices') . "\n";
