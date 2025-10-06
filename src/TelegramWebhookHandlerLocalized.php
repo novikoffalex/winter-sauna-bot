@@ -420,10 +420,19 @@ class TelegramWebhookHandlerLocalized
         $message .= $this->localization->t('write_info_next_message');
 
         // Добавляем кнопку для криптоплатежки
-        $serviceKey = strtolower(str_replace(' ', '_', $service));
+        // Определяем тип услуги по переданному названию
+        $serviceType = 'massage'; // по умолчанию
+        if (strpos($service, $this->localization->t('treatment')) !== false) {
+            $serviceType = 'treatment';
+        } elseif (strpos($service, $this->localization->t('spa')) !== false) {
+            $serviceType = 'spa';
+        } elseif (strpos($service, $this->localization->t('wellness')) !== false) {
+            $serviceType = 'wellness';
+        }
+        
         $keyboard = [
             [
-                ['text' => '💳 ' . $this->localization->t('pay_with_crypto'), 'callback_data' => 'crypto_payment_' . $serviceKey]
+                ['text' => '💳 ' . $this->localization->t('pay_with_crypto'), 'callback_data' => 'crypto_payment_' . $serviceType]
             ]
         ];
         
