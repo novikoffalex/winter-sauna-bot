@@ -24,12 +24,6 @@ class CryptoPaymentService
      */
     public function createInvoice($amount, $currency, $description, $orderId, $returnUrl = null)
     {
-        // Временно отключаем проверку валют для отладки
-        // $currencies = $this->getCurrencies();
-        // if (!$currencies || !in_array($currency, $currencies)) {
-        //     throw new Exception("Currency $currency is not supported");
-        // }
-
         $url = $this->baseUrl . '/v1/invoice';
         
         $data = [
