@@ -187,7 +187,7 @@ class PaymentHandler
     /**
      * Сохранение информации о заказе
      */
-    private function saveOrderInfo($orderId, $chatId, $service, $amount, $currency, $invoiceId)
+    public function saveOrderInfo($orderId, $chatId, $service, $amount, $currency, $invoiceId)
     {
         $orderData = [
             'order_id' => $orderId,
