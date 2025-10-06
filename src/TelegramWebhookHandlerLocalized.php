@@ -572,35 +572,39 @@ class TelegramWebhookHandlerLocalized
      */
     private function handleVoiceBooking($chatId, $analysis, $messageId)
     {
-        // 1) Показать клиенту список всех услуг (кнопки)
-        $this->sendServicesInfo($chatId, $messageId);
+        $language = $this->localization->getLanguage();
 
-        // 2) Отправить инструкции как бронировать голосом
-        $this->sendVoiceBookingInfo($chatId);
+        // Если не распознана услуга — сначала показать список услуг и короткую подсказку
+        if (empty($analysis['service'])) {
+            $this->sendServicesInfo($chatId, $messageId);
+            $hint = $language === 'ru'
+                ? "🎤 Выберите услугу кнопкой выше, затем скажите дату и время (например: ‘завтра в 19:00’) и количество гостей."
+                : "🎤 Choose a service above, then say the date and time (e.g. ‘tomorrow at 7 PM’) and number of guests.";
+            $this->telegramService->sendMessage($chatId, $hint);
+            return;
+        }
 
-        // 3) Сформировать предварительный результат распознавания (если удалось)
-        $formattedResult = (new TranscriptionService())->formatBookingResult($analysis, $this->localization->getLanguage());
-        
-        if ($formattedResult) {
-            // Сохраняем данные бронирования для последующего использования
-            $bookingData = [
-                'chat_id' => $chatId,
-                'service' => $analysis['service'] ?? 'massage',
-                'date' => $analysis['date'] ?? null,
-                'time' => $analysis['time'] ?? null,
-                'guests' => $analysis['guests'] ?? 1,
-                'created_at' => time(),
-                'language' => $this->localization->getLanguage()
-            ];
-            
-            // Сохраняем в файл
-            $bookingFile = 'data/voice_booking_' . $chatId . '.json';
-            if (!file_exists('data')) {
-                mkdir('data', 0755, true);
-            }
-            file_put_contents($bookingFile, json_encode($bookingData));
-            
-            // Создаем кнопки для подтверждения/изменения
+        // Сохраняем текущий черновик (даже если даты/времени нет)
+        $bookingData = [
+            'chat_id' => $chatId,
+            'service' => $analysis['service'] ?? 'massage',
+            'date' => $analysis['date'] ?? null,
+            'time' => $analysis['time'] ?? null,
+            'guests' => $analysis['guests'] ?? 1,
+            'created_at' => time(),
+            'language' => $language
+        ];
+        $bookingFile = 'data/voice_booking_' . $chatId . '.json';
+        if (!file_exists('data')) {
+            mkdir('data', 0755, true);
+        }
+        file_put_contents($bookingFile, json_encode($bookingData));
+
+        // Формируем текст для пользователя
+        $formattedResult = (new TranscriptionService())->formatBookingResult($analysis, $language);
+
+        // Если дата и время распознаны — предлагаем подтвердить
+        if (!empty($analysis['date']) && !empty($analysis['time'])) {
             $keyboard = [
                 [
                     ['text' => '✅ ' . $this->localization->t('confirm_booking'), 'callback_data' => 'confirm_voice_booking'],
@@ -610,9 +614,12 @@ class TelegramWebhookHandlerLocalized
                     ['text' => '❌ ' . $this->localization->t('cancel_booking'), 'callback_data' => 'cancel_voice_booking']
                 ]
             ];
-            
             $this->telegramService->sendMessageWithKeyboard($chatId, $formattedResult, $keyboard, $messageId);
+            return;
         }
+
+        // Иначе просим недостающие данные без лишних сообщений/кнопок
+        $this->telegramService->sendMessage($chatId, $formattedResult);
     }
 
     /**
