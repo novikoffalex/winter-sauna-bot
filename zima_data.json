@@ -7,174 +7,134 @@
     "working_hours": "10:00-22:00",
     "services": [
         {
-            "name_ru": "Традиционный тайский массаж 60 мин",
-            "name_en": "Traditional Thai Massage 60 min",
-            "description_ru": "Расслабьтесь с древней наукой, помогите расслабить мышцы, снять боли, стимулировать кровообращение.",
-            "description_en": "Relax with ancient science, help relax muscles, relieve aches and pains, stimulate blood circulation.",
-            "price": 500,
+            "name_ru": "2 Session – Full-Body Steaming (Both Sides)",
+            "name_en": "2 Session – Full-Body Steaming (Both Sides)",
+            "description_ru": "Полное парение тела с обеих сторон в течение 2 сессий",
+            "description_en": "Full-body steaming on both sides for 2 sessions",
+            "price": 3000,
             "currency": "THB",
-            "duration": "60 мин",
-            "category": "massage"
+            "duration": "30 мин",
+            "category": "steaming"
         },
         {
-            "name_ru": "Традиционный тайский массаж 90 мин",
-            "name_en": "Traditional Thai Massage 90 min",
-            "description_ru": "Расслабьтесь с древней наукой, помогите расслабить мышцы, снять боли, стимулировать кровообращение.",
-            "description_en": "Relax with ancient science, help relax muscles, relieve aches and pains, stimulate blood circulation.",
-            "price": 750,
+            "name_ru": "1 Session – Full-Body Steaming (Both Sides) in Private sauna room",
+            "name_en": "1 Session – Full-Body Steaming (Both Sides) in Private sauna room",
+            "description_ru": "Полное парение тела с обеих сторон в приватной сауне",
+            "description_en": "Full-body steaming on both sides in private sauna room",
+            "price": 2000,
             "currency": "THB",
-            "duration": "90 мин",
-            "category": "massage"
+            "duration": "15 мин",
+            "category": "steaming"
         },
         {
-            "name_ru": "Традиционный тайский массаж 120 мин",
-            "name_en": "Traditional Thai Massage 120 min",
-            "description_ru": "Расслабьтесь с древней наукой, помогите расслабить мышцы, снять боли, стимулировать кровообращение.",
-            "description_en": "Relax with ancient science, help relax muscles, relieve aches and pains, stimulate blood circulation.",
+            "name_ru": "Full-Body Steaming (Both Sides) in Main Sauna room",
+            "name_en": "Full-Body Steaming (Both Sides) in Main Sauna room",
+            "description_ru": "Полное парение тела с обеих сторон в основной сауне",
+            "description_en": "Full-body steaming on both sides in main sauna room",
+            "price": 1500,
+            "currency": "THB",
+            "duration": "15 мин",
+            "category": "steaming"
+        },
+        {
+            "name_ru": "Aroma steaming in private room",
+            "name_en": "Aroma steaming in private room",
+            "description_ru": "Арома-парение - мягкое ароматное парение в индивидуальной комнате",
+            "description_en": "Aroma steaming - gentle aromatic steaming in private room",
             "price": 1000,
             "currency": "THB",
-            "duration": "120 мин",
-            "category": "massage"
+            "duration": "15 мин",
+            "category": "steaming"
         },
         {
-            "name_ru": "Массаж арома маслами 60 мин",
-            "name_en": "Aroma Oil Massage 60 min",
-            "description_ru": "Ощутите расслабление в каждом массаже. Снизьте стресс, снимите усталость с натуральными эфирными маслами.",
-            "description_en": "Experience relaxation in every massage. Reduce stress, relieve fatigue with natural essential oils.",
-            "price": 600,
+            "name_ru": "Steelworker's Steaming",
+            "name_en": "Steelworker's Steaming",
+            "description_ru": "Интенсивное парение для глубокого прогрева",
+            "description_en": "Intensive steaming for deep heating",
+            "price": 4000,
             "currency": "THB",
-            "duration": "60 мин",
-            "category": "massage"
+            "duration": "40 мин",
+            "category": "steaming"
         },
         {
-            "name_ru": "Массаж арома маслами 90 мин",
-            "name_en": "Aroma Oil Massage 90 min",
-            "description_ru": "Ощутите расслабление в каждом массаже. Снизьте стресс, снимите усталость с натуральными эфирными маслами.",
-            "description_en": "Experience relaxation in every massage. Reduce stress, relieve fatigue with natural essential oils.",
-            "price": 900,
+            "name_ru": "1 Session – Back Steaming (one side)",
+            "name_en": "1 Session – Back Steaming (one side)",
+            "description_ru": "Постепенное прогревание от ног до головы с повышением температуры",
+            "description_en": "Gradual warming from feet to head with increasing temperature",
+            "price": 1000,
             "currency": "THB",
-            "duration": "90 мин",
-            "category": "massage"
+            "duration": "10 мин",
+            "category": "steaming"
         },
         {
-            "name_ru": "Массаж арома маслами 120 мин",
-            "name_en": "Aroma Oil Massage 120 min",
-            "description_ru": "Ощутите расслабление в каждом массаже. Снизьте стресс, снимите усталость с натуральными эфирными маслами.",
-            "description_en": "Experience relaxation in every massage. Reduce stress, relieve fatigue with natural essential oils.",
-            "price": 1200,
-            "currency": "THB",
-            "duration": "120 мин",
-            "category": "massage"
-        },
-        {
-            "name_ru": "Массаж горячими камнями 60 мин",
-            "name_en": "Hot Stone Massage 60 min",
-            "description_ru": "Терапевтический массаж с нагретыми камнями для глубокого расслабления и снятия напряжения.",
-            "description_en": "Therapeutic massage with heated stones for deep relaxation and tension relief.",
-            "price": 800,
-            "currency": "THB",
-            "duration": "60 мин",
-            "category": "massage"
-        },
-        {
-            "name_ru": "Массаж горячими камнями 90 мин",
-            "name_en": "Hot Stone Massage 90 min",
-            "description_ru": "Терапевтический массаж с нагретыми камнями для глубокого расслабления и снятия напряжения.",
-            "description_en": "Therapeutic massage with heated stones for deep relaxation and tension relief.",
-            "price": 1200,
-            "currency": "THB",
-            "duration": "90 мин",
-            "category": "massage"
-        },
-        {
-            "name_ru": "Массаж горячими камнями 120 мин",
-            "name_en": "Hot Stone Massage 120 min",
-            "description_ru": "Терапевтический массаж с нагретыми камнями для глубокого расслабления и снятия напряжения.",
-            "description_en": "Therapeutic massage with heated stones for deep relaxation and tension relief.",
-            "price": 1600,
-            "currency": "THB",
-            "duration": "120 мин",
-            "category": "massage"
-        },
-        {
-            "name_ru": "Антицеллюлитный массаж 60 мин",
-            "name_en": "Anti-cellulite Massage 60 min",
-            "description_ru": "Специализированный массаж для борьбы с целлюлитом и улучшения тонуса кожи.",
-            "description_en": "Specialized massage to combat cellulite and improve skin tone.",
-            "price": 700,
-            "currency": "THB",
-            "duration": "60 мин",
-            "category": "massage"
-        },
-        {
-            "name_ru": "Рефлексология стоп 30 мин",
-            "name_en": "Foot Reflexology 30 min",
-            "description_ru": "Точечный массаж стоп для стимуляции внутренних органов и общего оздоровления.",
-            "description_en": "Acupressure foot massage to stimulate internal organs and overall wellness.",
-            "price": 400,
-            "currency": "THB",
-            "duration": "30 мин",
-            "category": "massage"
-        },
-        {
-            "name_ru": "Рефлексология стоп 60 мин",
-            "name_en": "Foot Reflexology 60 min",
-            "description_ru": "Точечный массаж стоп для стимуляции внутренних органов и общего оздоровления.",
-            "description_en": "Acupressure foot massage to stimulate internal organs and overall wellness.",
-            "price": 700,
-            "currency": "THB",
-            "duration": "60 мин",
-            "category": "massage"
-        },
-        {
-            "name_ru": "Пилинг тела 60 мин",
-            "name_en": "Body Scrub 60 min",
-            "description_ru": "Отшелушивание омертвевших клеток кожи для обновления и улучшения текстуры кожи.",
-            "description_en": "Exfoliation of dead skin cells for renewal and improved skin texture.",
-            "price": 600,
-            "currency": "THB",
-            "duration": "60 мин",
-            "category": "spa"
-        },
-        {
-            "name_ru": "Обертывание глиной 60 мин",
-            "name_en": "Clay Wrap 60 min",
-            "description_ru": "Детокс-процедура с натуральной глиной для очищения и питания кожи.",
-            "description_en": "Detox procedure with natural clay for skin cleansing and nourishment.",
-            "price": 800,
-            "currency": "THB",
-            "duration": "60 мин",
-            "category": "spa"
-        },
-        {
-            "name_ru": "Увлажняющая процедура с алоэ вера 60 мин",
-            "name_en": "Aloe Vera Moisturizing Treatment 60 min",
-            "description_ru": "Лечит, увлажняет и укрепляет кожу. Приносит комфорт и расслабление. Охлаждает и успокаивает покраснения.",
-            "description_en": "Heals, moisturizes and strengthens the skin. Brings comfort and relaxation. Cools and soothes redness.",
+            "name_ru": "Hot Oil Massage 1 Hour",
+            "name_en": "Hot Oil Massage 1 Hour",
+            "description_ru": "Терапевтический массаж тела, сочетающий преимущества массажа с целебными свойствами нагретых масел",
+            "description_en": "A therapeutic bodywork treatment that combines the benefits of massage with the therapeutic properties of warmed oils",
             "price": 750,
             "currency": "THB",
-            "duration": "60 мин",
-            "category": "spa"
+            "duration": "1 час",
+            "category": "massage"
         },
         {
-            "name_ru": "Сеанс ароматерапии 30 мин",
-            "name_en": "Aromatherapy Session 30 min",
-            "description_ru": "Терапевтическое использование эфирных масел для улучшения физического и эмоционального состояния.",
-            "description_en": "Therapeutic use of essential oils to improve physical and emotional well-being.",
+            "name_ru": "Thai oil massage 1 Hour",
+            "name_en": "Thai oil massage 1 Hour",
+            "description_ru": "Сочетает традиционный тайский массаж с техниками акупрессуры, растяжки и скручивания",
+            "description_en": "Combines traditional Thai massage, using acupressure, stretching and twisting techniques",
             "price": 500,
             "currency": "THB",
-            "duration": "30 мин",
-            "category": "aromatherapy"
+            "duration": "1 час",
+            "category": "massage"
         },
         {
-            "name_ru": "Сеанс ароматерапии 60 мин",
-            "name_en": "Aromatherapy Session 60 min",
-            "description_ru": "Терапевтическое использование эфирных масел для улучшения физического и эмоционального состояния.",
-            "description_en": "Therapeutic use of essential oils to improve physical and emotional well-being.",
-            "price": 800,
+            "name_ru": "Office Syndrome Massage 1 hour",
+            "name_en": "Office Syndrome Massage 1 hour",
+            "description_ru": "С маслом и тайским горячим травяным бальзамом. Фокус на спине, шее и плечах",
+            "description_en": "With oil and Thai hot herbal balm. Focus on the back, neck and shoulders",
+            "price": 500,
             "currency": "THB",
-            "duration": "60 мин",
-            "category": "aromatherapy"
+            "duration": "1 час",
+            "category": "massage"
+        },
+        {
+            "name_ru": "Deep Tissue Massage 1 Hour",
+            "name_en": "Deep Tissue Massage 1 Hour",
+            "description_ru": "Массаж глубоко в мышечный слой, снимая узлы, накопленные от стресса и перенапряжения",
+            "description_en": "Massage deep into the muscle layer, releasing knots accumulated from stress and overuse",
+            "price": 750,
+            "currency": "THB",
+            "duration": "1 час",
+            "category": "massage"
+        },
+        {
+            "name_ru": "Aloe Vera Treatment 1 Hour",
+            "name_en": "Aloe Vera Treatment 1 Hour",
+            "description_ru": "Лечит, увлажняет и укрепляет кожу. Приносит комфорт и расслабление",
+            "description_en": "Heals, moisturizes and strengthens the skin. Brings comfort and relaxation",
+            "price": 750,
+            "currency": "THB",
+            "duration": "1 час",
+            "category": "treatment"
+        },
+        {
+            "name_ru": "Traditional Thai Massage 1 Hour",
+            "name_en": "Traditional Thai Massage 1 Hour",
+            "description_ru": "Расслабьтесь с древней наукой, помогите расслабить мышцы, снять боли, стимулировать кровообращение",
+            "description_en": "Relax with ancient science, help relax muscles, relieve aches and pains, stimulate blood circulation",
+            "price": 500,
+            "currency": "THB",
+            "duration": "1 час",
+            "category": "massage"
+        },
+        {
+            "name_ru": "Aromatherapy massage",
+            "name_en": "Aromatherapy massage",
+            "description_ru": "Ощутите расслабление в каждом массаже. Снизьте стресс, снимите усталость с натуральными эфирными маслами",
+            "description_en": "Experience relaxation in every massage. Reduce stress, relieve fatigue with natural essential oils",
+            "price": 500,
+            "currency": "THB",
+            "duration": "1 час",
+            "category": "massage"
         }
     ]
 }

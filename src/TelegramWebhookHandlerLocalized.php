@@ -683,7 +683,15 @@ class TelegramWebhookHandlerLocalized
                 'пилинг' => 'scrub',
                 'обертывание' => 'wrap',
                 'алоэ' => 'aloe',
-                'ароматерапия' => 'aromatherapy'
+                'ароматерапия' => 'aromatherapy',
+                'парение' => 'steaming',
+                'сауна' => 'sauna',
+                'steelworker' => 'steelworker',
+                'full-body' => 'full-body',
+                'back steaming' => 'back steaming',
+                'hot oil' => 'hot oil',
+                'deep tissue' => 'deep tissue',
+                'office syndrome' => 'office syndrome'
             ];
             
             foreach ($services as $serviceData) {
