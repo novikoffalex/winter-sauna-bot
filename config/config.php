@@ -17,6 +17,7 @@ if (file_exists(__DIR__ . '/../.env')) {
 // Конфигурация Telegram Bot
 define('TELEGRAM_BOT_TOKEN', $_ENV['TELEGRAM_BOT_TOKEN'] ?? '');
 define('TELEGRAM_WEBHOOK_URL', $_ENV['TELEGRAM_WEBHOOK_URL'] ?? '');
+define('BOT_USERNAME', $_ENV['BOT_USERNAME'] ?? 'ZimaSaunaBot');
 
 // Конфигурация OpenAI
 define('OPENAI_API_KEY', $_ENV['OPENAI_API_KEY'] ?? '');
@@ -27,6 +28,10 @@ define('SAUNA_NAME', $_ENV['SAUNA_NAME'] ?? 'Зима');
 define('SAUNA_LOCATION', $_ENV['SAUNA_LOCATION'] ?? 'Пхукет, Таиланд');
 define('SAUNA_WORKING_HOURS', $_ENV['SAUNA_WORKING_HOURS'] ?? '10:00-22:00');
 define('SAUNA_PHONE', $_ENV['SAUNA_PHONE'] ?? '+66-XX-XXX-XXXX');
+
+// Конфигурация криптоплатежек
+define('CRYPTOPAY_API_KEY', $_ENV['CRYPTOPAY_API_KEY'] ?? '');
+define('CRYPTOPAY_WEBHOOK_SECRET', $_ENV['CRYPTOPAY_WEBHOOK_SECRET'] ?? '');
 
 // Конфигурация сервера
 define('WEBHOOK_VERIFICATION_TOKEN', $_ENV['WEBHOOK_VERIFICATION_TOKEN'] ?? '');

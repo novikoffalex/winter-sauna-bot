@@ -217,6 +217,34 @@ class TelegramService
     }
 
     /**
+     * Отправка фото с подписью
+     */
+    public function sendPhoto($chatId, $photoUrl, $caption = null, $replyToMessageId = null)
+    {
+        try {
+            $messageData = [
+                'chat_id' => $chatId,
+                'photo' => $photoUrl
+            ];
+
+            if ($caption) {
+                $messageData['caption'] = $caption;
+                $messageData['parse_mode'] = 'HTML';
+            }
+
+            if ($replyToMessageId) {
+                $messageData['reply_to_message_id'] = $replyToMessageId;
+            }
+
+            $response = $this->makeRequest('POST', '/sendPhoto', $messageData);
+            return $response;
+        } catch (Exception $e) {
+            error_log('Failed to send photo: ' . $e->getMessage());
+            throw $e;
+        }
+    }
+
+    /**
      * Выполнение HTTP запроса
      */
     private function makeRequest($method, $endpoint, $data = [])

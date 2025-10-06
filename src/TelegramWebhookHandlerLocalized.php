@@ -85,6 +85,12 @@ class TelegramWebhookHandlerLocalized
             return;
         }
 
+        // Обработка специальных команд для платежей
+        if (strpos($text, '/start payment_success') === 0) {
+            $this->handlePaymentSuccess($chatId, $messageId);
+            return;
+        }
+
         // Обработка обычного сообщения через AI
         $this->handleAIMessage($chatId, $text, $messageId, $from);
     }
@@ -230,6 +236,27 @@ class TelegramWebhookHandlerLocalized
             case 'show_services':
                 $this->sendServicesInfo($chatId);
                 break;
+            case 'start_booking':
+                $this->startBookingProcess($chatId);
+                break;
+            case 'show_contacts':
+                $this->sendContactInfo($chatId);
+                break;
+            case 'crypto_payment_massage':
+                $this->handleCryptoPayment($chatId, 'massage');
+                break;
+            case 'crypto_payment_treatment':
+                $this->handleCryptoPayment($chatId, 'treatment');
+                break;
+            case 'crypto_payment_spa':
+                $this->handleCryptoPayment($chatId, 'spa');
+                break;
+            case 'crypto_payment_wellness':
+                $this->handleCryptoPayment($chatId, 'wellness');
+                break;
+            default:
+                $this->telegramService->sendMessage($chatId, $this->localization->t('unknown_action') . ": " . $data);
+                break;
         }
     }
 
@@ -367,6 +394,64 @@ class TelegramWebhookHandlerLocalized
         $message .= "4. **" . $this->localization->t('additional_services') . "** (" . $this->localization->t('if_needed') . ")\n\n";
         $message .= $this->localization->t('write_info_next_message');
 
-        $this->telegramService->sendMessage($chatId, $message);
+        // Добавляем кнопку для криптоплатежки
+        $serviceKey = strtolower(str_replace(' ', '_', $service));
+        $keyboard = [
+            [
+                ['text' => '💳 ' . $this->localization->t('pay_with_crypto'), 'callback_data' => 'crypto_payment_' . $serviceKey]
+            ]
+        ];
+        
+        $this->telegramService->sendMessageWithKeyboard($chatId, $message, $keyboard);
+    }
+
+    /**
+     * Обработка успешной оплаты
+     */
+    private function handlePaymentSuccess($chatId, $messageId = null)
+    {
+        $message = "🎉 **" . $this->localization->t('payment_success') . "!**\n\n";
+        $message .= $this->localization->t('ticket_created') . "! " . $this->localization->t('if_questions_contact');
+        
+        $this->telegramService->sendMessage($chatId, $message, $messageId);
+    }
+
+    /**
+     * Обработка криптоплатежки
+     */
+    private function handleCryptoPayment($chatId, $service, $messageId = null)
+    {
+        require_once 'PaymentHandler.php';
+        
+        $paymentHandler = new PaymentHandler($this->localization->getLanguage());
+        
+        // Получаем цену услуги (примерные цены)
+        $prices = [
+            'massage' => 50,
+            'treatment' => 80,
+            'spa' => 100,
+            'wellness' => 120
+        ];
+        
+        $amount = $prices[$service] ?? 50;
+        
+        // Создаем инвойс
+        $result = $paymentHandler->createPaymentInvoice($chatId, $service, $amount, 'USDT');
+        
+        if ($result['success']) {
+            $message = "💳 **" . $this->localization->t('crypto_payment') . "**\n\n";
+            $message .= "🏊‍♀️ **" . $this->localization->t('service') . ":** {$service}\n";
+            $message .= "💰 **" . $this->localization->t('amount') . ":** {$amount} USDT\n\n";
+            $message .= "🔗 **" . $this->localization->t('pay_url') . ":**\n";
+            $message .= $result['pay_url'] . "\n\n";
+            $message .= "⏰ " . $this->localization->t('payment_expires_in') . ": 15 минут";
+            
+            $this->telegramService->sendMessage($chatId, $message, $messageId);
+        } else {
+            $message = "❌ **" . $this->localization->t('payment_failed') . "**\n\n";
+            $message .= $result['error'];
+            
+            $this->telegramService->sendMessage($chatId, $message, $messageId);
+        }
     }
 }
