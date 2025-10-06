@@ -22,6 +22,12 @@ class CryptoPaymentService
      */
     public function createInvoice($amount, $currency, $description, $orderId, $returnUrl = null)
     {
+        // Сначала получаем доступные валюты
+        $currencies = $this->getCurrencies();
+        if (!$currencies || !in_array($currency, $currencies)) {
+            throw new Exception("Currency $currency is not supported");
+        }
+
         $url = $this->baseUrl . '/payment';
         
         $data = [
@@ -31,7 +37,6 @@ class CryptoPaymentService
             'order_id' => $orderId,
             'order_description' => $description,
             'ipn_callback_url' => 'https://winter-sauna-bot-phuket-f79605d5d044.herokuapp.com/crypto-webhook.php',
-            'case' => 'success',
             'success_url' => $returnUrl ?: 'https://t.me/' . BOT_USERNAME,
             'cancel_url' => 'https://t.me/' . BOT_USERNAME
         ];
@@ -66,6 +71,16 @@ class CryptoPaymentService
     {
         $url = $this->baseUrl . '/getExchangeRates';
         return $this->makeRequest($url);
+    }
+
+    /**
+     * Получение доступных валют
+     */
+    public function getCurrencies()
+    {
+        $url = $this->baseUrl . '/currencies';
+        $response = $this->makeRequest($url);
+        return $response['currencies'] ?? [];
     }
 
     /**
