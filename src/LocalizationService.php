@@ -9,7 +9,7 @@ class LocalizationService
     private $translations;
     private $zimaData;
 
-    public function __construct($userLanguage = 'ru')
+    public function __construct($userLanguage = 'en')
     {
         $this->userLanguage = $this->detectLanguage($userLanguage);
         $this->loadTranslations();
@@ -21,9 +21,9 @@ class LocalizationService
      */
     private function detectLanguage($userLanguage)
     {
-        // Если язык не передан, используем русский по умолчанию
+        // Если язык не передан, используем английский по умолчанию
         if (empty($userLanguage)) {
-            return 'ru';
+            return 'en';
         }
 
         // Проверяем поддерживаемые языки
@@ -33,8 +33,8 @@ class LocalizationService
             return $userLanguage;
         }
 
-        // Если язык не поддерживается, возвращаем русский
-        return 'ru';
+        // Если язык не поддерживается, возвращаем английский
+        return 'en';
     }
 
     /**

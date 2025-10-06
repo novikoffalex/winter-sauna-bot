@@ -12,7 +12,7 @@ class AIServiceLocalized
     private $baseUrl;
     private $localization;
 
-    public function __construct($userLanguage = 'ru')
+    public function __construct($userLanguage = 'en')
     {
         $this->apiKey = OPENAI_API_KEY;
         $this->model = OPENAI_MODEL;

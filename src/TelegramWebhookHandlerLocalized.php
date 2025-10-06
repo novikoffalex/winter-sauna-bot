@@ -102,8 +102,8 @@ class TelegramWebhookHandlerLocalized
             }
         }
         
-        // По умолчанию русский
-        return 'ru';
+        // По умолчанию английский (для международных туристов)
+        return 'en';
     }
 
     /**
