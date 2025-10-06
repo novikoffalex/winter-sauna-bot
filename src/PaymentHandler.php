@@ -139,6 +139,9 @@ class PaymentHandler
      */
     private function sendTicketToUser($chatId, $ticketData, $qrData)
     {
+        // Создаем ссылку на веб-страницу с билетом
+        $ticketUrl = "https://winter-sauna-bot-phuket-f79605d5d044.herokuapp.com/qr-ticket.php?order_id=" . urlencode($ticketData['order_id']);
+        
         $message = "🎫 **" . $this->localization->t('ticket_created') . "!**\n\n";
         $message .= "📋 **" . $this->localization->t('ticket_id') . ":** `{$ticketData['ticket_id']}`\n";
         $message .= "🏊‍♀️ **" . $this->localization->t('service') . ":** {$ticketData['service']}\n";
@@ -148,14 +151,12 @@ class PaymentHandler
         $message .= "1. " . $this->localization->t('show_qr_at_entrance') . "\n";
         $message .= "2. " . $this->localization->t('scan_qr_code') . "\n";
         $message .= "3. " . $this->localization->t('enjoy_service') . "\n\n";
-        $message .= "⚠️ " . $this->localization->t('ticket_valid_24h');
+        $message .= "⚠️ " . $this->localization->t('ticket_valid_24h') . "\n\n";
+        $message .= "🌐 **" . $this->localization->t('open_ticket') . ":**\n";
+        $message .= "[📱 " . $this->localization->t('view_ticket_online') . "](" . $ticketUrl . ")";
 
-        // Отправляем сообщение с QR-кодом
-        $this->telegramService->sendPhoto(
-            $chatId,
-            $qrData['qr_image_url'],
-            $message
-        );
+        // Отправляем сообщение со ссылкой на билет
+        $this->telegramService->sendMessage($chatId, $message);
 
         // Отправляем дополнительную информацию
         $infoMessage = "🔍 **" . $this->localization->t('ticket_details') . ":**\n\n";
