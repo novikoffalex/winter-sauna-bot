@@ -264,6 +264,9 @@ class TelegramWebhookHandlerLocalized
                 case 'crypto_payment_wellness':
                     $this->handleCryptoPayment($chatId, 'wellness');
                     break;
+                case 'crypto_payment_test':
+                    $this->handleCryptoPayment($chatId, 'test');
+                    break;
                 case 'voice_booking_info':
                     $this->sendVoiceBookingInfo($chatId);
                     break;
@@ -298,6 +301,9 @@ class TelegramWebhookHandlerLocalized
                 [
                     ['text' => '📅 ' . $this->localization->t('book_now'), 'callback_data' => 'start_booking'],
                     ['text' => '🎤 ' . $this->localization->t('voice_booking'), 'callback_data' => 'voice_booking_info']
+                ],
+                [
+                    ['text' => '🧪 Тест оплаты (1 USDT)', 'callback_data' => 'crypto_payment_test']
                 ],
                 [
                     ['text' => '📍 ' . $this->localization->t('contact_info'), 'callback_data' => 'show_contacts']
@@ -585,7 +591,8 @@ class TelegramWebhookHandlerLocalized
             'massage' => 15,    // Минимум 11.72 USDT
             'treatment' => 25,  // Минимум 11.72 USDT
             'spa' => 30,        // Минимум 11.72 USDT
-            'wellness' => 35    // Минимум 11.72 USDT
+            'wellness' => 35,   // Минимум 11.72 USDT
+            'test' => 1         // Тестовая оплата 1 USDT
         ];
         
         $amount = $prices[$service] ?? 50;

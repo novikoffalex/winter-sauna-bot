@@ -170,7 +170,8 @@ class PaymentHandler
             'massage' => $this->localization->t('massage'),
             'treatment' => $this->localization->t('treatment'),
             'spa' => $this->localization->t('spa'),
-            'wellness' => $this->localization->t('wellness')
+            'wellness' => $this->localization->t('wellness'),
+            'test' => 'Тестовая оплата'
         ];
 
         return $descriptions[$service] ?? $service;
