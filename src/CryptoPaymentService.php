@@ -24,13 +24,13 @@ class CryptoPaymentService
      */
     public function createInvoice($amount, $currency, $description, $orderId, $returnUrl = null)
     {
-        // Сначала получаем доступные валюты
-        $currencies = $this->getCurrencies();
-        if (!$currencies || !in_array($currency, $currencies)) {
-            throw new Exception("Currency $currency is not supported");
-        }
+        // Временно отключаем проверку валют для отладки
+        // $currencies = $this->getCurrencies();
+        // if (!$currencies || !in_array($currency, $currencies)) {
+        //     throw new Exception("Currency $currency is not supported");
+        // }
 
-        $url = $this->baseUrl . '/v1/payment';
+        $url = $this->baseUrl . '/v1/invoice';
         
         $data = [
             'price_amount' => $amount,
@@ -42,6 +42,11 @@ class CryptoPaymentService
             'success_url' => $returnUrl ?: 'https://t.me/' . BOT_USERNAME,
             'cancel_url' => 'https://t.me/' . BOT_USERNAME
         ];
+
+        error_log("NOWPayments createInvoice request: " . json_encode([
+            'url' => $url,
+            'data' => $data
+        ]));
 
         return $this->makeRequest($url, $data);
     }
@@ -80,8 +85,9 @@ class CryptoPaymentService
      */
     public function getCurrencies()
     {
-        $url = $this->baseUrl . '/currencies';
+        $url = $this->baseUrl . '/v1/currencies';
         $response = $this->makeRequest($url);
+        error_log("NOWPayments currencies response: " . json_encode($response));
         return $response['currencies'] ?? [];
     }
 
