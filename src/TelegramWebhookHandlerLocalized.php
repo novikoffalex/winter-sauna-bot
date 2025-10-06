@@ -599,6 +599,8 @@ class TelegramWebhookHandlerLocalized
             $message .= "💰 **" . $this->localization->t('amount') . ":** {$amount} USDT\n\n";
             $message .= "🔗 **" . $this->localization->t('pay_url') . ":**\n";
             $message .= $result['pay_url'] . "\n\n";
+            $message .= "📍 **Адрес для оплаты:**\n";
+            $message .= "`" . ($result['pay_address'] ?? 'Не указан') . "`\n\n";
             $message .= "⏰ " . $this->localization->t('payment_expires_in') . ": 15 минут";
             
             $this->telegramService->sendMessage($chatId, $message, $messageId);

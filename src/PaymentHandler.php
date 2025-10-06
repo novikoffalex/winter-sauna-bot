@@ -52,8 +52,14 @@ class PaymentHandler
             $this->saveOrderInfo($orderId, $chatId, $service, $amount, $currency, $invoiceId);
 
             // Парсим ответ от NOWPayments
-            $invoiceId = $invoice['invoice_id'] ?? $invoice['id'] ?? $invoice['payment_id'] ?? 'unknown';
+            $invoiceId = $invoice['payment_id'] ?? $invoice['invoice_id'] ?? $invoice['id'] ?? 'unknown';
+            $payAddress = $invoice['pay_address'] ?? '';
             $payUrl = $invoice['invoice_url'] ?? $invoice['pay_url'] ?? $invoice['payment_url'] ?? $invoice['checkout_url'] ?? $invoice['url'] ?? '';
+            
+            // Если нет URL, но есть адрес, создаем ссылку на блокчейн эксплорер
+            if (empty($payUrl) && !empty($payAddress)) {
+                $payUrl = "https://tronscan.org/#/address/{$payAddress}";
+            }
             
             error_log("Parsed invoice data: " . json_encode([
                 'invoice_id' => $invoiceId,
@@ -66,6 +72,7 @@ class PaymentHandler
                 'order_id' => $orderId,
                 'invoice_id' => $invoiceId,
                 'pay_url' => $payUrl,
+                'pay_address' => $payAddress,
                 'amount' => $amount,
                 'currency' => $currency
             ];
