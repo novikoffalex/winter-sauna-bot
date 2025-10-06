@@ -48,7 +48,13 @@ class TelegramWebhookHandlerLocalized
 
         } catch (Exception $e) {
             error_log('Webhook handling error: ' . $e->getMessage());
-            http_response_code(500);
+            // Не возвращаем 500 для callback query ошибок
+            if (strpos($e->getMessage(), 'query is too old') !== false) {
+                http_response_code(200);
+                echo 'OK';
+            } else {
+                http_response_code(500);
+            }
         }
     }
 
@@ -198,8 +204,13 @@ class TelegramWebhookHandlerLocalized
 
         error_log("Processing callback query from chat {$chatId} in language {$userLanguage}: {$data}");
 
-        // Отвечаем на callback query
-        $this->telegramService->answerCallbackQuery($callbackQueryId);
+        // Отвечаем на callback query (игнорируем ошибки для старых запросов)
+        try {
+            $this->telegramService->answerCallbackQuery($callbackQueryId);
+        } catch (Exception $e) {
+            error_log("Callback query answer failed (probably too old): " . $e->getMessage());
+            // Продолжаем выполнение, даже если не удалось ответить на callback
+        }
 
         // Обрабатываем данные кнопки
         switch ($data) {
