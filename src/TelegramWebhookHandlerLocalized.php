@@ -328,7 +328,7 @@ class TelegramWebhookHandlerLocalized
         $keyboard = ['inline_keyboard' => []];
 
         foreach ($services as $service) {
-            $name = $service['name'];
+            $name = $service['name_' . $this->localization->getLanguage()] ?? $service['name_ru'];
             $priceThb = $service['price'];
             $callback = 'select_service_' . rawurlencode($name) . '_' . (int)$priceThb;
             $buttonText = $name . ' — ' . $this->localization->formatPrice($priceThb);
