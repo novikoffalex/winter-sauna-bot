@@ -13,7 +13,7 @@ class CryptoPaymentService
     public function __construct()
     {
         $this->apiKey = CRYPTOPAY_API_KEY ?? '';
-        $this->baseUrl = 'https://api.coingate.com/v2';
+        $this->baseUrl = 'https://api.nowpayments.io/v1';
         $this->webhookSecret = CRYPTOPAY_WEBHOOK_SECRET ?? '';
     }
 
@@ -22,19 +22,18 @@ class CryptoPaymentService
      */
     public function createInvoice($amount, $currency, $description, $orderId, $returnUrl = null)
     {
-        $url = $this->baseUrl . '/orders';
+        $url = $this->baseUrl . '/payment';
         
         $data = [
-            'order_id' => $orderId,
             'price_amount' => $amount,
-            'price_currency' => $currency,
-            'receive_currency' => $currency,
-            'title' => $description,
-            'description' => "Zima SPA Wellness - Order #{$orderId}",
-            'callback_url' => 'https://winter-sauna-bot-phuket-f79605d5d044.herokuapp.com/crypto-webhook.php',
+            'price_currency' => 'USD', // NOWPayments требует USD как базовую валюту
+            'pay_currency' => $currency,
+            'order_id' => $orderId,
+            'order_description' => $description,
+            'ipn_callback_url' => 'https://winter-sauna-bot-phuket-f79605d5d044.herokuapp.com/crypto-webhook.php',
+            'case' => 'success',
             'success_url' => $returnUrl ?: 'https://t.me/' . BOT_USERNAME,
-            'cancel_url' => 'https://t.me/' . BOT_USERNAME,
-            'token' => $this->apiKey
+            'cancel_url' => 'https://t.me/' . BOT_USERNAME
         ];
 
         return $this->makeRequest($url, $data);
@@ -201,8 +200,8 @@ class CryptoPaymentService
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/x-www-form-urlencoded',
-            'Authorization: Bearer ' . $this->apiKey,
+            'Content-Type: application/json',
+            'x-api-key: ' . $this->apiKey,
             'User-Agent: Zima-Sauna-Bot/1.0'
         ]);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
@@ -228,8 +227,8 @@ class CryptoPaymentService
             throw new Exception("CryptoPay invalid JSON response");
         }
 
-        if (isset($decoded['error'])) {
-            throw new Exception("CoinGate API error: " . ($decoded['error'] ?? 'Unknown error'));
+        if (isset($decoded['code']) && $decoded['code'] !== 0) {
+            throw new Exception("NOWPayments API error: " . ($decoded['message'] ?? 'Unknown error'));
         }
 
         return $decoded;

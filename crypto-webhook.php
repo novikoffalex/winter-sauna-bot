@@ -35,12 +35,12 @@ error_log("CryptoPay webhook received: " . json_encode($data));
 
 // Обрабатываем событие
 try {
-    // CoinGate отправляет данные в формате order
-    if (isset($data['id']) && isset($data['status'])) {
+    // NOWPayments отправляет данные в формате payment
+    if (isset($data['payment_id']) && isset($data['payment_status'])) {
         $orderId = $data['order_id'];
-        $status = $data['status'];
+        $status = $data['payment_status'];
         
-        if ($status === 'paid') {
+        if ($status === 'finished') {
             $result = $paymentHandler->handleSuccessfulPayment($data);
             
             if ($result['success']) {
@@ -52,17 +52,17 @@ try {
                 http_response_code(500);
                 echo json_encode(['error' => $result['error']]);
             }
-        } elseif ($status === 'canceled' || $status === 'expired') {
+        } elseif ($status === 'failed' || $status === 'refunded') {
             error_log("Payment failed for order: " . $orderId . " Status: " . $status);
             http_response_code(200);
             echo json_encode(['status' => 'acknowledged']);
         } else {
-            error_log("Unknown CoinGate status: " . $status);
+            error_log("Unknown NOWPayments status: " . $status);
             http_response_code(200);
             echo json_encode(['status' => 'ignored']);
         }
     } else {
-        error_log("Invalid CoinGate webhook data: " . json_encode($data));
+        error_log("Invalid NOWPayments webhook data: " . json_encode($data));
         http_response_code(400);
         echo json_encode(['error' => 'Invalid data']);
     }
