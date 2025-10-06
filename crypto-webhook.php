@@ -13,13 +13,13 @@ $signature = $_SERVER['HTTP_CRYPTO_PAY_SIGNATURE'] ?? '';
 // Создаем обработчик платежей
 $paymentHandler = new PaymentHandler();
 
-// Валидируем webhook
-if (!$paymentHandler->validateWebhook($input, $signature)) {
-    error_log("Invalid CryptoPay webhook signature");
-    http_response_code(401);
-    echo json_encode(['error' => 'Invalid signature']);
-    exit;
-}
+// Валидируем webhook (CoinGate не требует подписи)
+// if (!$paymentHandler->validateWebhook($input, $signature)) {
+//     error_log("Invalid CoinGate webhook signature");
+//     http_response_code(401);
+//     echo json_encode(['error' => 'Invalid signature']);
+//     exit;
+// }
 
 // Парсим данные
 $data = json_decode($input, true);
@@ -35,9 +35,13 @@ error_log("CryptoPay webhook received: " . json_encode($data));
 
 // Обрабатываем событие
 try {
-    switch ($data['update_type']) {
-        case 'invoice_paid':
-            $result = $paymentHandler->handleSuccessfulPayment($data['invoice']);
+    // CoinGate отправляет данные в формате order
+    if (isset($data['id']) && isset($data['status'])) {
+        $orderId = $data['order_id'];
+        $status = $data['status'];
+        
+        if ($status === 'paid') {
+            $result = $paymentHandler->handleSuccessfulPayment($data);
             
             if ($result['success']) {
                 error_log("Payment processed successfully: " . $result['ticket_id']);
@@ -48,19 +52,19 @@ try {
                 http_response_code(500);
                 echo json_encode(['error' => $result['error']]);
             }
-            break;
-            
-        case 'invoice_failed':
-            error_log("Payment failed for invoice: " . $data['invoice']['id']);
-            // Можно отправить уведомление пользователю
+        } elseif ($status === 'canceled' || $status === 'expired') {
+            error_log("Payment failed for order: " . $orderId . " Status: " . $status);
             http_response_code(200);
             echo json_encode(['status' => 'acknowledged']);
-            break;
-            
-        default:
-            error_log("Unknown CryptoPay update type: " . $data['update_type']);
+        } else {
+            error_log("Unknown CoinGate status: " . $status);
             http_response_code(200);
             echo json_encode(['status' => 'ignored']);
+        }
+    } else {
+        error_log("Invalid CoinGate webhook data: " . json_encode($data));
+        http_response_code(400);
+        echo json_encode(['error' => 'Invalid data']);
     }
     
 } catch (Exception $e) {
