@@ -36,7 +36,7 @@ class CryptoPaymentService
         $data = [
             'price_amount' => $amount,
             'price_currency' => 'USD', // NOWPayments требует USD как базовую валюту
-            'pay_currency'\ => $currency,
+            'pay_currency' => $currency,
             'order_id' => $orderId,
             'order_description' => $description,
             'ipn_callback_url' => 'https://winter-sauna-bot-phuket-f79605d5d044.herokuapp.com/crypto-webhook.php',
