@@ -267,6 +267,13 @@ class TelegramWebhookHandlerLocalized
                 case 'crypto_payment_test':
                     $this->handleCryptoPayment($chatId, 'test');
                     break;
+                default:
+                    // Обработка тестовой отметки об оплате: mark_paid_test_{service}
+                    if (strpos($data, 'mark_paid_test_') === 0) {
+                        $service = substr($data, strlen('mark_paid_test_')) ?: 'test';
+                        $this->simulateTestPayment($chatId, $service);
+                        break;
+                    }
                 case 'voice_booking_info':
                     $this->sendVoiceBookingInfo($chatId);
                     break;
@@ -457,6 +464,32 @@ class TelegramWebhookHandlerLocalized
     }
 
     /**
+     * Симуляция успешной оплаты (тестовая отметка)
+     */
+    private function simulateTestPayment($chatId, $service)
+    {
+        require_once 'PaymentHandler.php';
+        require_once 'TicketService.php';
+
+        $paymentHandler = new PaymentHandler($this->localization->getLanguage());
+        $ticketService = new TicketService();
+
+        // Создаем тестовый заказ
+        $orderId = 'ORDER-TEST-' . time();
+        $amount = 15;
+        $currency = 'USDT';
+        $invoiceId = 'TEST-INV-' . time();
+
+        $paymentHandler->saveOrderInfo($orderId, $chatId, $service, $amount, $currency, $invoiceId);
+        $paymentHandler->updateOrderStatus($orderId, 'paid');
+
+        // Создаем билет и отправляем
+        $ticketData = $ticketService->createTicket($orderId, $service, $amount, $currency, ['id' => $invoiceId]);
+        $qrData = $ticketService->generateTicketQR($ticketData);
+        $paymentHandler->sendTicketToUser($chatId, $ticketData, $qrData);
+    }
+
+    /**
      * Обработка голосового сообщения
      */
     private function handleVoiceMessage($chatId, $voice, $messageId, $from)
@@ -604,13 +637,18 @@ class TelegramWebhookHandlerLocalized
             $message = "💳 **" . $this->localization->t('crypto_payment') . "**\n\n";
             $message .= "🏊‍♀️ **" . $this->localization->t('service') . ":** {$service}\n";
             $message .= "💰 **" . $this->localization->t('amount') . ":** {$amount} USDT\n\n";
-            $message .= "🔗 **" . $this->localization->t('pay_url') . ":**\n";
-            $message .= $result['pay_url'] . "\n\n";
-            $message .= "📍 **Адрес для оплаты:**\n";
-            $message .= "`" . ($result['pay_address'] ?? 'Не указан') . "`\n\n";
             $message .= "⏰ " . $this->localization->t('payment_expires_in') . ": 15 минут";
-            
-            $this->telegramService->sendMessage($chatId, $message, $messageId);
+
+            $keyboard = [
+                'inline_keyboard' => [
+                    [
+                        ['text' => '🌐 ' . $this->localization->t('open_payment'), 'url' => $result['pay_url']],
+                        ['text' => '✅ ' . $this->localization->t('mark_paid_test'), 'callback_data' => 'mark_paid_test_' . $service]
+                    ]
+                ]
+            ];
+
+            $this->telegramService->sendMessageWithKeyboard($chatId, $message, $keyboard, $messageId);
         } else {
             $message = "❌ **" . $this->localization->t('payment_failed') . "**\n\n";
             $message .= $result['error'];
