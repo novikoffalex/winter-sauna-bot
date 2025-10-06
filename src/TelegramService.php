@@ -225,25 +225,46 @@ class TelegramService
     /**
      * Отправка фото с подписью
      */
-    public function sendPhoto($chatId, $photoUrl, $caption = null, $replyToMessageId = null)
+    public function sendPhoto($chatId, $photo, $caption = null, $replyToMessageId = null)
     {
         try {
-            $messageData = [
-                'chat_id' => $chatId,
-                'photo' => $photoUrl
-            ];
+            // Если это локальный файл, отправляем как multipart/form-data
+            if (file_exists($photo)) {
+                $messageData = [
+                    'chat_id' => $chatId,
+                    'photo' => new CURLFile($photo, 'image/png', basename($photo))
+                ];
 
-            if ($caption) {
-                $messageData['caption'] = $caption;
-                $messageData['parse_mode'] = 'HTML';
+                if ($caption) {
+                    $messageData['caption'] = $caption;
+                    $messageData['parse_mode'] = 'HTML';
+                }
+
+                if ($replyToMessageId) {
+                    $messageData['reply_to_message_id'] = $replyToMessageId;
+                }
+
+                $response = $this->makeRequest('POST', '/sendPhoto', $messageData, true);
+                return $response;
+            } else {
+                // Если это URL, отправляем как обычно
+                $messageData = [
+                    'chat_id' => $chatId,
+                    'photo' => $photo
+                ];
+
+                if ($caption) {
+                    $messageData['caption'] = $caption;
+                    $messageData['parse_mode'] = 'HTML';
+                }
+
+                if ($replyToMessageId) {
+                    $messageData['reply_to_message_id'] = $replyToMessageId;
+                }
+
+                $response = $this->makeRequest('POST', '/sendPhoto', $messageData);
+                return $response;
             }
-
-            if ($replyToMessageId) {
-                $messageData['reply_to_message_id'] = $replyToMessageId;
-            }
-
-            $response = $this->makeRequest('POST', '/sendPhoto', $messageData);
-            return $response;
         } catch (Exception $e) {
             error_log('Failed to send photo: ' . $e->getMessage());
             throw $e;
@@ -297,6 +318,56 @@ class TelegramService
     }
 
     /**
+     * Получение обновлений (для получения chat_id)
+     */
+    public function getUpdates($offset = null, $limit = 10)
+    {
+        try {
+            $url = $this->baseUrl . '/getUpdates';
+            $params = [];
+            if ($offset !== null) {
+                $params['offset'] = $offset;
+            }
+            $params['limit'] = $limit;
+            
+            if (!empty($params)) {
+                $url .= '?' . http_build_query($params);
+            }
+            
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'User-Agent: Zima-Sauna-Bot/1.0'
+            ]);
+
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $error = curl_error($ch);
+            curl_close($ch);
+
+            if ($error) {
+                throw new Exception("cURL error: $error");
+            }
+
+            if ($httpCode >= 400) {
+                throw new Exception("HTTP error $httpCode: $response");
+            }
+
+            $decoded = json_decode($response, true);
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                throw new Exception("Invalid JSON response");
+            }
+
+            return $decoded;
+        } catch (Exception $e) {
+            error_log('Failed to get updates: ' . $e->getMessage());
+            throw $e;
+        }
+    }
+
+    /**
      * Отправка статуса "печатает"
      */
     public function sendTypingAction($chatId)
@@ -316,7 +387,7 @@ class TelegramService
     /**
      * Выполнение HTTP запроса
      */
-    private function makeRequest($method, $endpoint, $data = [])
+    private function makeRequest($method, $endpoint, $data = [], $isMultipart = false)
     {
         $url = $this->baseUrl . $endpoint;
 
@@ -324,14 +395,22 @@ class TelegramService
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, [
-            'Content-Type: application/json',
-            'User-Agent: Winter-Sauna-Bot/1.0'
-        ]);
+        
+        if ($isMultipart) {
+            if ($method === 'POST' && !empty($data)) {
+                curl_setopt($ch, CURLOPT_POST, true);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+            }
+        } else {
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Content-Type: application/json',
+                'User-Agent: Winter-Sauna-Bot/1.0'
+            ]);
 
-        if ($method === 'POST' && !empty($data)) {
-            curl_setopt($ch, CURLOPT_POST, true);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+            if ($method === 'POST' && !empty($data)) {
+                curl_setopt($ch, CURLOPT_POST, true);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+            }
         }
 
         $response = curl_exec($ch);

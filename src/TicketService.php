@@ -3,6 +3,8 @@
  * Сервис для работы с билетами и QR-кодами
  */
 
+require_once __DIR__ . '/../vendor/autoload.php';
+
 class TicketService
 {
     private $cryptoPayment;
@@ -194,11 +196,29 @@ class TicketService
      */
     private function generateQRImage($content)
     {
-        // Используем Google Charts API для генерации QR-кода
-        $size = '300x300';
-        $url = "https://chart.googleapis.com/chart?chs={$size}&cht=qr&chl=" . urlencode($content);
-        
-        return $url;
+        try {
+            // Используем Simple QR Code для генерации QR-кода
+            $qrCode = new \SimpleSoftwareIO\QrCode\Generator();
+            $qrCode->size(300)->margin(10);
+            
+            // Сохраняем QR-код во временный файл
+            $tempFile = 'data/qr_' . time() . '.png';
+            if (!file_exists('data')) {
+                mkdir('data', 0755, true);
+            }
+            
+            $qrCode->generate($content, $tempFile);
+            
+            // Возвращаем путь к файлу
+            return $tempFile;
+            
+        } catch (Exception $e) {
+            error_log("QR generation error: " . $e->getMessage());
+            // Fallback на Google Charts API
+            $size = '300x300';
+            $url = "https://chart.googleapis.com/chart?chs={$size}&cht=qr&chl=" . urlencode($content);
+            return $url;
+        }
     }
 
     /**

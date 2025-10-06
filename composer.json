@@ -3,7 +3,8 @@
     "description": "Winter Sauna Telegram Bot with OpenAI integration",
     "type": "project",
     "require": {
-        "php": ">=8.0"
+        "php": ">=8.0",
+        "simplesoftwareio/simple-qrcode": "^4.2"
     },
     "scripts": {
         "start": "php -S 0.0.0.0:$PORT"
