@@ -150,13 +150,17 @@ class TranscriptionService
                 'лечение' => 'treatment', 
                 'спа' => 'spa',
                 'баня' => 'sauna',
-                'сауна' => 'sauna'
+                'сауна' => 'sauna',
+                'парение' => 'steaming',
+                'парилка' => 'steaming'
             ],
             'en' => [
                 'massage' => 'massage',
                 'treatment' => 'treatment',
                 'spa' => 'spa',
-                'sauna' => 'sauna'
+                'sauna' => 'sauna',
+                'steam' => 'steaming',
+                'steaming' => 'steaming'
             ]
         ];
 
@@ -203,6 +207,16 @@ class TranscriptionService
             }
         }
 
+        // Если явных слов о времени нет, попробуем все равно вытащить дату/время из цифр
+        if (!$date) {
+            $maybeDate = $this->extractDate($text, $userLanguage);
+            if ($maybeDate) { $date = $maybeDate; $confidence += 0.1; }
+        }
+        if (!$time) {
+            $maybeTime = $this->extractTime($text, $userLanguage);
+            if ($maybeTime) { $time = $maybeTime; $confidence += 0.1; }
+        }
+
         // Определяем количество гостей
         $guests = $this->extractGuests($text, $userLanguage);
         if ($guests > 1) {
@@ -210,7 +224,7 @@ class TranscriptionService
         }
 
         return [
-            'is_booking' => $isBooking && $confidence > 0.3,
+            'is_booking' => $isBooking && $confidence > 0.2,
             'service' => $service,
             'date' => $date,
             'time' => $time,
