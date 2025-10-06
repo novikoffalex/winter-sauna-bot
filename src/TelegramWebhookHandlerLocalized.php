@@ -280,7 +280,7 @@ class TelegramWebhookHandlerLocalized
                     $this->cancelVoiceBooking($chatId);
                     break;
                 default:
-                    if (strpos($data, 'select_service_') === 0) {
+                    if (strpos($data, 'sel_') === 0) {
                         $this->handleSelectService($chatId, $data);
                         break;
                     }
@@ -327,10 +327,10 @@ class TelegramWebhookHandlerLocalized
         $message = "🏊‍♀️ " . $this->localization->t('services') . ":\n\n";
         $keyboard = ['inline_keyboard' => []];
 
-        foreach ($services as $service) {
+        foreach ($services as $index => $service) {
             $name = $service['name_' . $this->localization->getLanguage()] ?? $service['name_ru'];
             $priceThb = $service['price'];
-            $callback = 'select_service_' . rawurlencode($name) . '_' . (int)$priceThb;
+            $callback = 'sel_' . $index . '_' . (int)$priceThb; // Короткий callback_data
             $buttonText = $name . ' — ' . $this->localization->formatPrice($priceThb);
             $keyboard['inline_keyboard'][] = [ ['text' => $buttonText, 'callback_data' => $callback] ];
         }
@@ -466,13 +466,28 @@ class TelegramWebhookHandlerLocalized
      */
     private function handleSelectService($chatId, $data)
     {
-        // Разбираем callback_data
-        // Пример: select_service_%D0%90%D0%BB%D0%BE%D1%8D%20%D0%92%D0%B5%D1%80%D0%B0%20%D0%BB%D0%B5%D1%87%D0%B5%D0%BD%D0%B8%D0%B5_750
-        $payload = substr($data, strlen('select_service_'));
-        $parts = explode('_', $payload);
-        $priceThb = (float)array_pop($parts);
-        $encodedName = implode('_', $parts);
-        $serviceName = rawurldecode($encodedName);
+        // Разбираем callback_data (sel_0_750)
+        $parts = explode('_', $data);
+        $serviceIndex = (int)$parts[1]; // Индекс услуги
+        $priceThb = (int)$parts[2]; // Цена
+
+        // Загружаем данные услуг
+        $dataFile = 'zima_data.json';
+        if (!file_exists($dataFile)) {
+            $this->telegramService->sendMessage($chatId, "❌ " . $this->localization->t('data_not_found'));
+            return;
+        }
+
+        $jsonData = json_decode(file_get_contents($dataFile), true);
+        $services = $jsonData['services'] ?? [];
+
+        if (!isset($services[$serviceIndex])) {
+            $this->telegramService->sendMessage($chatId, "❌ " . $this->localization->t('service_not_found'));
+            return;
+        }
+
+        $service = $services[$serviceIndex];
+        $serviceName = $service['name_' . $this->localization->getLanguage()] ?? $service['name_ru'];
 
         require_once 'CurrencyService.php';
         require_once 'PaymentHandler.php';
