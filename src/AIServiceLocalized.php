@@ -4,20 +4,25 @@
  */
 
 require_once 'LocalizationService.php';
+require_once 'ConversationStore.php';
 
 class AIServiceLocalized
 {
     private $apiKey;
     private $model;
     private $baseUrl;
+    private $assistantId;
     private $localization;
+    private $store;
 
     public function __construct($userLanguage = 'en')
     {
         $this->apiKey = OPENAI_API_KEY;
         $this->model = OPENAI_MODEL;
         $this->baseUrl = 'https://api.openai.com/v1';
+        $this->assistantId = 'asst_XCmDp6s1aj9DhOnHVwrzQZXI';
         $this->localization = new LocalizationService($userLanguage);
+        $this->store = new ConversationStore();
     }
 
     /**
@@ -52,28 +57,28 @@ class AIServiceLocalized
         try {
             error_log('Processing message with AI in language: ' . $this->localization->getLanguage());
 
-            $messages = [
-                [
-                    'role' => 'system',
-                    'content' => $this->getSystemPrompt()
-                ],
-                [
-                    'role' => 'user',
-                    'content' => $this->formatUserMessage($userMessage, $context)
-                ]
-            ];
+            // Используем Assistant API вместо Chat Completions
+            $chatId = $context['chat_id'] ?? null;
+            $threadId = $this->getOrCreateThread($chatId);
 
-            $response = $this->makeRequest('/chat/completions', [
-                'model' => $this->model,
-                'messages' => $messages,
-                'max_tokens' => 1000,
-                'temperature' => 0.7,
-                'presence_penalty' => 0.1,
-                'frequency_penalty' => 0.1
-            ]);
+            // Добавляем сообщение в тред
+            $this->addMessageToThread($threadId, $userMessage);
 
-            $aiResponse = $response['choices'][0]['message']['content'];
-            
+            // Запускаем ассистента
+            $runId = $this->createRun($threadId);
+
+            // Ждем завершения
+            $this->waitForRunCompletion($threadId, $runId);
+
+            // Получаем ответ
+            $aiResponse = $this->getLastAssistantMessage($threadId);
+
+            // Сохраняем в локальную историю для совместимости
+            if ($chatId) {
+                $this->store->append($chatId, 'user', $userMessage);
+                $this->store->append($chatId, 'assistant', $aiResponse);
+            }
+
             error_log('AI response generated in ' . $this->localization->getLanguage());
             return $this->formatResponse($aiResponse, $context);
 
@@ -212,17 +217,117 @@ class AIServiceLocalized
     }
 
     /**
+     * Получение или создание треда для чата
+     */
+    private function getOrCreateThread($chatId)
+    {
+        $threadFile = 'data/conversations/thread_' . $chatId . '.json';
+        if (file_exists($threadFile)) {
+            $data = json_decode(file_get_contents($threadFile), true);
+            return $data['thread_id'] ?? $this->createNewThread($chatId);
+        }
+        return $this->createNewThread($chatId);
+    }
+
+    /**
+     * Создание нового треда
+     */
+    private function createNewThread($chatId)
+    {
+        $response = $this->makeRequest('/threads', [], 'POST');
+        $threadId = $response['id'];
+        
+        $threadFile = 'data/conversations/thread_' . $chatId . '.json';
+        if (!file_exists('data/conversations')) {
+            mkdir('data/conversations', 0755, true);
+        }
+        file_put_contents($threadFile, json_encode(['thread_id' => $threadId]));
+        
+        return $threadId;
+    }
+
+    /**
+     * Добавление сообщения в тред
+     */
+    private function addMessageToThread($threadId, $content)
+    {
+        $this->makeRequest("/threads/{$threadId}/messages", [
+            'role' => 'user',
+            'content' => $content
+        ], 'POST');
+    }
+
+    /**
+     * Создание запуска ассистента
+     */
+    private function createRun($threadId)
+    {
+        $response = $this->makeRequest("/threads/{$threadId}/runs", [
+            'assistant_id' => $this->assistantId
+        ], 'POST');
+        return $response['id'];
+    }
+
+    /**
+     * Ожидание завершения запуска
+     */
+    private function waitForRunCompletion($threadId, $runId)
+    {
+        $maxAttempts = 30;
+        $attempt = 0;
+        
+        while ($attempt < $maxAttempts) {
+            $response = $this->makeRequest("/threads/{$threadId}/runs/{$runId}");
+            $status = $response['status'];
+            
+            if ($status === 'completed') {
+                return;
+            }
+            
+            if ($status === 'failed' || $status === 'cancelled') {
+                throw new Exception("Run failed with status: $status");
+            }
+            
+            sleep(1);
+            $attempt++;
+        }
+        
+        throw new Exception("Run timeout after $maxAttempts attempts");
+    }
+
+    /**
+     * Получение последнего сообщения ассистента
+     */
+    private function getLastAssistantMessage($threadId)
+    {
+        $response = $this->makeRequest("/threads/{$threadId}/messages");
+        $messages = $response['data'] ?? [];
+        
+        // Ищем последнее сообщение от ассистента
+        for ($i = count($messages) - 1; $i >= 0; $i--) {
+            if ($messages[$i]['role'] === 'assistant') {
+                $content = $messages[$i]['content'][0]['text']['value'] ?? '';
+                return $content;
+            }
+        }
+        
+        throw new Exception("No assistant message found");
+    }
+
+    /**
      * Выполнение HTTP запроса к OpenAI API
      */
-    private function makeRequest($endpoint, $data)
+    private function makeRequest($endpoint, $data = [], $method = 'GET')
     {
         $url = $this->baseUrl . $endpoint;
 
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+        if ($method === 'POST' && !empty($data)) {
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        }
         curl_setopt($ch, CURLOPT_TIMEOUT, 30);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',

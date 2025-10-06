@@ -189,7 +189,8 @@ class TelegramWebhookHandlerLocalized
                 'senderId' => $from['id'],
                 'firstName' => $from['first_name'] ?? '',
                 'username' => $from['username'] ?? '',
-                'language' => $this->localization->getLanguage()
+                'language' => $this->localization->getLanguage(),
+                'chat_id' => $chatId
             ];
 
             $aiResponse = $this->aiService->processMessage($text, $context);
