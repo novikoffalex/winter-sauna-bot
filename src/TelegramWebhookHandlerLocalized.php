@@ -572,6 +572,13 @@ class TelegramWebhookHandlerLocalized
      */
     private function handleVoiceBooking($chatId, $analysis, $messageId)
     {
+        // 1) Показать клиенту список всех услуг (кнопки)
+        $this->sendServicesInfo($chatId, $messageId);
+
+        // 2) Отправить инструкции как бронировать голосом
+        $this->sendVoiceBookingInfo($chatId);
+
+        // 3) Сформировать предварительный результат распознавания (если удалось)
         $formattedResult = (new TranscriptionService())->formatBookingResult($analysis, $this->localization->getLanguage());
         
         if ($formattedResult) {
