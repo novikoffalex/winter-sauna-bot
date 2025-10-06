@@ -592,7 +592,7 @@ class TelegramWebhookHandlerLocalized
             'treatment' => 25,  // Минимум 11.72 USDT
             'spa' => 30,        // Минимум 11.72 USDT
             'wellness' => 35,   // Минимум 11.72 USDT
-            'test' => 12        // Тестовая оплата 12 USDT (минимум ~11.72)
+            'test' => 5         // Тестовая оплата 5 USDT
         ];
         
         $amount = $prices[$service] ?? 50;
