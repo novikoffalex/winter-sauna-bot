@@ -24,6 +24,13 @@ class CryptoPaymentService
      */
     public function createInvoice($amount, $currency, $description, $orderId, $returnUrl = null)
     {
+        // Проверяем доступность валюты
+        $currencies = $this->getCurrencies();
+        if (!$currencies || !in_array($currency, $currencies)) {
+            error_log("Currency $currency not supported. Available currencies: " . json_encode($currencies));
+            throw new Exception("Currency $currency is not supported. Please try BTC or another available currency.");
+        }
+
         $url = $this->baseUrl . '/v1/invoice';
         
         $data = [
