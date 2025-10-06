@@ -51,6 +51,7 @@ class CryptoPaymentService
 
         $response = $this->makeRequest($url, $data);
         error_log("NOWPayments createInvoice response: " . json_encode($response));
+        error_log("NOWPayments response keys: " . implode(', ', array_keys($response)));
         
         return $response;
     }
