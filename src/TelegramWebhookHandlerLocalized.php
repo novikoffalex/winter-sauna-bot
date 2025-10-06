@@ -188,6 +188,15 @@ class TelegramWebhookHandlerLocalized
         $chatId = $callbackQuery['message']['chat']['id'];
         $data = $callbackQuery['data'];
         $callbackQueryId = $callbackQuery['id'];
+        $from = $callbackQuery['from'];
+
+        // Инициализируем локализацию для callback query
+        $userLanguage = $this->detectUserLanguage($from);
+        $this->localization = new LocalizationService($userLanguage);
+        $this->aiService = new AIServiceLocalized($userLanguage);
+        $this->aiService->initialize();
+
+        error_log("Processing callback query from chat {$chatId} in language {$userLanguage}: {$data}");
 
         // Отвечаем на callback query
         $this->telegramService->answerCallbackQuery($callbackQueryId);
