@@ -13,7 +13,7 @@ class CryptoPaymentService
     public function __construct()
     {
         $this->apiKey = NOWPAYMENTS_API_KEY ?? '';
-        $this->baseUrl = 'https://api.nowpayments.io/v1';
+        $this->baseUrl = 'https://api.nowpayments.io';
         $this->webhookSecret = NOWPAYMENTS_WEBHOOK_SECRET ?? '';
     }
 
