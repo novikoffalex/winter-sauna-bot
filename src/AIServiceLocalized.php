@@ -382,7 +382,7 @@ class AIServiceLocalized
             // Сохраняем информацию о заказе
             $this->saveOrderInfo($orderId, $serviceName, $priceThb, $priceUsd);
             
-            return "Вот ссылка для оплаты: $paymentUrl\n\nУслуга: $serviceName\nСумма: $priceUsd USDT (USDTTRC20)\n\nПосле оплаты, пожалуйста, дайте мне знать, чтобы я мог создать QR-билет для входа!";
+            return "PAYMENT_LINK|$serviceName|$priceUsd|$paymentUrl";
             
         } catch (Exception $e) {
             error_log("Error creating payment link: " . $e->getMessage());

@@ -195,7 +195,12 @@ class TelegramWebhookHandlerLocalized
 
             $aiResponse = $this->aiService->processMessage($text, $context);
             
-            $this->telegramService->sendMessage($chatId, $aiResponse, $messageId);
+            // Проверяем, содержит ли ответ специальный формат ссылки на оплату
+            if (strpos($aiResponse, 'PAYMENT_LINK|') === 0) {
+                $this->handlePaymentLinkResponse($chatId, $aiResponse, $messageId);
+            } else {
+                $this->telegramService->sendMessage($chatId, $aiResponse, $messageId);
+            }
 
         } catch (Exception $e) {
             error_log('AI processing error: ' . $e->getMessage());
@@ -567,6 +572,38 @@ class TelegramWebhookHandlerLocalized
                 "❌ " . $this->localization->t('voice_processing_error'),
                 $messageId
             );
+        }
+    }
+
+    /**
+     * Обработка ответа с ссылкой на оплату
+     */
+    private function handlePaymentLinkResponse($chatId, $aiResponse, $messageId)
+    {
+        // Парсим формат: PAYMENT_LINK|serviceName|price|url
+        $parts = explode('|', $aiResponse);
+        if (count($parts) >= 4) {
+            $serviceName = $parts[1];
+            $price = $parts[2];
+            $paymentUrl = $parts[3];
+            
+            $message = "Услуга: $serviceName\nСумма: $price USDT\n\nПосле оплаты сообщите мне для создания QR-билета.";
+            
+            $keyboard = [
+                'inline_keyboard' => [
+                    [
+                        [
+                            'text' => '💳 Оплатить',
+                            'url' => $paymentUrl
+                        ]
+                    ]
+                ]
+            ];
+            
+            $this->telegramService->sendMessageWithKeyboard($chatId, $message, $keyboard, $messageId);
+        } else {
+            // Fallback к обычному сообщению
+            $this->telegramService->sendMessage($chatId, $aiResponse, $messageId);
         }
     }
 
