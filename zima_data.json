@@ -7,8 +7,8 @@
     "working_hours": "10:00-22:00",
     "services": [
         {
-            "name_ru": "2 сессии — Парение всего тела (обе стороны)",
-            "name_en": "2 Session – Full-Body Steaming (Both Sides)",
+            "name_ru": "Двойное парение всего тела",
+            "name_en": "Double Full-Body Steaming",
             "description_ru": "Полное парение тела с обеих сторон в течение 2 сессий. Процедура начинается с постепенного прогревания от ступней до головы с использованием традиционных травяных сборов. Первая сессия - мягкий прогрев с температурой 45-50°C, вторая сессия - более интенсивный прогрев 50-55°C. Травяные пары содержат эвкалипт, лаванду, ромашку и мяту, что обеспечивает глубокое расслабление мышц, улучшение кровообращения и детоксикацию организма. Идеально подходит для снятия стресса, улучшения сна и общего оздоровления.",
             "description_en": "Full-body steaming on both sides for 2 sessions. The procedure begins with gradual heating from feet to head using traditional herbal blends. First session - gentle warming at 45-50°C, second session - more intensive warming at 50-55°C. Herbal vapors contain eucalyptus, lavender, chamomile and mint, providing deep muscle relaxation, improved circulation and body detoxification. Perfect for stress relief, better sleep and overall wellness.",
             "price": 3000,
@@ -17,8 +17,8 @@
             "category": "steaming"
         },
         {
-            "name_ru": "1 сессия — Парение всего тела (обе стороны) в приватной сауне",
-            "name_en": "1 Session – Full-Body Steaming (Both Sides) in Private sauna room",
+            "name_ru": "Приватное парение всего тела",
+            "name_en": "Private Full-Body Steaming",
             "description_ru": "Индивидуальное парение в приватной сауне с полным контролем температуры и травяных добавок. Процедура проводится в изолированной комнате с температурой 50-55°C и влажностью 40-50%. Используется специальная травяная смесь из эвкалипта, розмарина и лаванды. Мастер контролирует процесс, обеспечивая максимальный комфорт и безопасность. Идеально для тех, кто предпочитает уединение и персонализированный подход.",
             "description_en": "Individual steaming in a private sauna with full control over temperature and herbal additives. The procedure is carried out in an isolated room at 50-55°C with 40-50% humidity. Special herbal blend of eucalyptus, rosemary and lavender is used. The master controls the process, ensuring maximum comfort and safety. Perfect for those who prefer privacy and personalized approach.",
             "price": 2000,
@@ -27,8 +27,8 @@
             "category": "steaming"
         },
         {
-            "name_ru": "Парение всего тела (обе стороны) в основной сауне",
-            "name_en": "Full-Body Steaming (Both Sides) in Main Sauna room",
+            "name_ru": "Основное парение всего тела",
+            "name_en": "Main Sauna Full-Body Steaming",
             "description_ru": "Традиционное парение в основной сауне с использованием классических методов и травяных сборов. Температура 55-60°C, влажность 30-40%. Процедура включает контрастные обливания прохладной водой для усиления эффекта. Используется смесь из мяты, эвкалипта и чабреца. Отлично подходит для детоксикации, улучшения иммунитета и снятия усталости.",
             "description_en": "Traditional steaming in the main sauna using classical methods and herbal blends. Temperature 55-60°C, humidity 30-40%. The procedure includes contrast dousing with cool water to enhance the effect. A blend of mint, eucalyptus and thyme is used. Excellent for detoxification, immunity improvement and fatigue relief.",
             "price": 1500,
@@ -37,8 +37,8 @@
             "category": "steaming"
         },
         {
-            "name_ru": "Арома‑парение в приватной комнате",
-            "name_en": "Aroma steaming in private room",
+            "name_ru": "Ароматерапевтическое парение",
+            "name_en": "Aromatherapy Steaming",
             "description_ru": "Мягкое ароматерапевтическое парение с использованием эфирных масел лаванды, иланг-иланга и бергамота. Температура 45-50°C, низкая влажность. Процедура направлена на глубокое расслабление нервной системы, снятие стресса и улучшение эмоционального состояния. Включает дыхательные упражнения и медитативные практики.",
             "description_en": "Gentle aromatherapeutic steaming using essential oils of lavender, ylang-ylang and bergamot. Temperature 45-50°C, low humidity. The procedure is aimed at deep relaxation of the nervous system, stress relief and improvement of emotional state. Includes breathing exercises and meditative practices.",
             "price": 1000,
@@ -47,8 +47,8 @@
             "category": "steaming"
         },
         {
-            "name_ru": "Парение «Сталевара»",
-            "name_en": "Steelworker's Steaming",
+            "name_ru": "Интенсивное парение «Сталевара»",
+            "name_en": "Intensive Steelworker's Steaming",
             "description_ru": "Интенсивная процедура парения для опытных пользователей. Температура 60-65°C с постепенным повышением. Используется специальная травяная смесь с добавлением хвойных экстрактов и морской соли. Процедура включает несколько циклов прогрева и охлаждения. Эффективно снимает мышечные зажимы, улучшает кровообращение и способствует глубокой детоксикации.",
             "description_en": "Intensive steaming procedure for experienced users. Temperature 60-65°C with gradual increase. Special herbal blend with coniferous extracts and sea salt is used. The procedure includes several cycles of heating and cooling. Effectively relieves muscle tension, improves circulation and promotes deep detoxification.",
             "price": 4000,
@@ -57,8 +57,8 @@
             "category": "steaming"
         },
         {
-            "name_ru": "1 сессия — Парение спины (одна сторона)",
-            "name_en": "1 Session – Back Steaming (one side)",
+            "name_ru": "Целевое парение спины",
+            "name_en": "Targeted Back Steaming",
             "description_ru": "Целевое парение спины с акцентом на шейно-воротниковую зону и поясницу. Температура 50-55°C. Используется специальная травяная смесь из розмарина, можжевельника и эвкалипта. Процедура включает массажные элементы и растяжку. Идеально для снятия напряжения после рабочего дня, улучшения осанки и лечения болей в спине.",
             "description_en": "Targeted back steaming with focus on neck-collar zone and lower back. Temperature 50-55°C. Special herbal blend of rosemary, juniper and eucalyptus is used. The procedure includes massage elements and stretching. Perfect for relieving tension after work day, improving posture and treating back pain.",
             "price": 1000,
@@ -67,8 +67,8 @@
             "category": "steaming"
         },
         {
-            "name_ru": "Горячий масляный массаж 1 час",
-            "name_en": "Hot Oil Massage 1 Hour",
+            "name_ru": "Горячий масляный массаж",
+            "name_en": "Hot Oil Massage",
             "description_ru": "Терапевтический массаж с использованием теплых ароматических масел (кокосовое, жожоба, миндальное). Техника включает глубокие поглаживания, разминания и растяжки. Масла подогреваются до 38-40°C для максимального расслабления мышц и улучшения проникновения активных веществ. Процедура снимает стресс, улучшает кровообращение, увлажняет и питает кожу.",
             "description_en": "Therapeutic massage using warm aromatic oils (coconut, jojoba, almond). Technique includes deep strokes, kneading and stretching. Oils are heated to 38-40°C for maximum muscle relaxation and improved penetration of active substances. The procedure relieves stress, improves circulation, moisturizes and nourishes the skin.",
             "price": 750,
@@ -77,8 +77,8 @@
             "category": "massage"
         },
         {
-            "name_ru": "Тайский масляный массаж 1 час",
-            "name_en": "Thai oil massage 1 Hour",
+            "name_ru": "Тайский масляный массаж",
+            "name_en": "Thai Oil Massage",
             "description_ru": "Классический тайский массаж на полу с использованием собственного веса мастера. Включает акупрессуру по энергетическим линиям (сен), пассивную йогу и растяжки. Работа ведется без масла, через одежду. Процедура восстанавливает энергетический баланс, улучшает гибкость суставов и снимает мышечное напряжение.",
             "description_en": "Classical Thai massage on the floor using the master's body weight. Includes acupressure along energy lines (sen), passive yoga and stretching. Work is done without oil, through clothing. The procedure restores energy balance, improves joint flexibility and relieves muscle tension.",
             "price": 500,
@@ -87,8 +87,8 @@
             "category": "massage"
         },
         {
-            "name_ru": "Массаж офисного синдрома 1 час",
-            "name_en": "Office Syndrome Massage 1 hour",
+            "name_ru": "Антистресс массаж",
+            "name_en": "Anti-Stress Massage",
             "description_ru": "Специализированный массаж для офисных работников с использованием теплого масла и тайского травяного бальзама. Акцент на шейно-воротниковой зоне, плечах, пояснице и кистях рук. Техника включает глубокие разминания, акупрессуру и теплые компрессы. Эффективно снимает напряжение от длительной работы за компьютером.",
             "description_en": "Specialized massage for office workers using warm oil and Thai herbal balm. Focus on neck-collar zone, shoulders, lower back and hands. Technique includes deep kneading, acupressure and warm compresses. Effectively relieves tension from prolonged computer work.",
             "price": 500,
@@ -97,8 +97,8 @@
             "category": "massage"
         },
         {
-            "name_ru": "Глубокий тканевый массаж 1 час",
-            "name_en": "Deep Tissue Massage 1 Hour",
+            "name_ru": "Глубокий тканевый массаж",
+            "name_en": "Deep Tissue Massage",
             "description_ru": "Интенсивный массаж глубоких слоев мышц с использованием техник миофасциального релиза. Работа с триггерными точками, спайками и мышечными узлами. Применяется давление локтями, предплечьями и специальными инструментами. Процедура болезненная, но очень эффективная для лечения хронических болей и восстановления после травм.",
             "description_en": "Intensive deep tissue massage using myofascial release techniques. Work with trigger points, adhesions and muscle knots. Pressure is applied with elbows, forearms and special tools. The procedure is painful but very effective for treating chronic pain and recovery from injuries.",
             "price": 750,
@@ -107,8 +107,8 @@
             "category": "massage"
         },
         {
-            "name_ru": "Лечение Алоэ Вера 1 час",
-            "name_en": "Aloe Vera Treatment 1 Hour",
+            "name_ru": "Лечение Алоэ Вера",
+            "name_en": "Aloe Vera Treatment",
             "description_ru": "Лечебная процедура с использованием свежего геля алоэ вера. Начинается с мягкого пилинга, затем нанесение охлаждающего геля алоэ с легким массажем. Процедура включает компрессы и маску с алоэ. Эффективно лечит солнечные ожоги, воспаления кожи, увлажняет и омолаживает. Особенно полезна после парения и длительного пребывания на солнце.",
             "description_en": "Therapeutic procedure using fresh aloe vera gel. Begins with gentle peeling, then application of cooling aloe gel with light massage. The procedure includes compresses and aloe mask. Effectively treats sunburn, skin inflammation, moisturizes and rejuvenates. Especially beneficial after steaming and prolonged sun exposure.",
             "price": 750,
@@ -117,8 +117,8 @@
             "category": "treatment"
         },
         {
-            "name_ru": "Традиционный тайский массаж 1 час",
-            "name_en": "Traditional Thai Massage 1 Hour",
+            "name_ru": "Традиционный тайский массаж",
+            "name_en": "Traditional Thai Massage",
             "description_ru": "Аутентичный тайский массаж по древним традициям. Включает работу с энергетическими меридианами, пассивную йогу и медитативные техники. Мастер использует ладони, локти, колени и стопы для воздействия на все тело. Процедура восстанавливает циркуляцию энергии, улучшает подвижность и приносит глубокое расслабление.",
             "description_en": "Authentic Thai massage according to ancient traditions. Includes work with energy meridians, passive yoga and meditative techniques. The master uses palms, elbows, knees and feet to work on the whole body. The procedure restores energy circulation, improves mobility and brings deep relaxation.",
             "price": 500,
@@ -127,8 +127,8 @@
             "category": "massage"
         },
         {
-            "name_ru": "Ароматерапевтический массаж",
-            "name_en": "Aromatherapy massage",
+            "name_ru": "Эфирный массаж",
+            "name_en": "Essential Oil Massage",
             "description_ru": "Терапевтический массаж с индивидуально подобранными эфирными маслами (лаванда, роза, иланг-иланг, бергамот). Процедура начинается с аромадиагностики для выбора подходящих масел. Техника включает легкие поглаживания, круговые движения и точечное воздействие. Оказывает мощное воздействие на эмоциональное состояние, снимает тревожность и улучшает сон.",
             "description_en": "Therapeutic massage with individually selected essential oils (lavender, rose, ylang-ylang, bergamot). The procedure begins with aroma diagnosis to choose suitable oils. Technique includes light strokes, circular movements and point impact. Has a powerful effect on emotional state, relieves anxiety and improves sleep.",
             "price": 500,
