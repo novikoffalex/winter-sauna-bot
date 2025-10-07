@@ -305,16 +305,16 @@ class AIServiceLocalized
      */
     private function getLastAssistantMessage($threadId)
     {
-        $response = $this->makeRequest("/threads/{$threadId}/messages");
+        $response = $this->makeRequest("/threads/{$threadId}/messages?order=desc&limit=10");
         $messages = $response['data'] ?? [];
         
-        error_log("Thread {$threadId} has " . count($messages) . " messages");
+        error_log("Thread {$threadId} has " . count($messages) . " messages (ordered desc)");
         
-        // Ищем последнее сообщение от ассистента
-        for ($i = count($messages) - 1; $i >= 0; $i--) {
-            if ($messages[$i]['role'] === 'assistant') {
-                $content = $messages[$i]['content'][0]['text']['value'] ?? '';
-                error_log("Found assistant message: " . $content);
+        // Ищем первое сообщение от ассистента (последнее по времени)
+        foreach ($messages as $message) {
+            if ($message['role'] === 'assistant') {
+                $content = $message['content'][0]['text']['value'] ?? '';
+                error_log("Found latest assistant message: " . $content);
                 return $content;
             }
         }
