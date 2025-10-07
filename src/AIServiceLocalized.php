@@ -372,14 +372,85 @@ class AIServiceLocalized
             $priceUsd = 15;
         }
         
-        // Создаем ссылку через NOWPayments
+        // Создаем ссылку через NOWPayments API
         $orderId = 'zima_' . time() . '_' . rand(1000, 9999);
-        $paymentUrl = "https://nowpayments.io/payment?iid=" . $orderId . "&amount=" . $priceUsd . "&currency=USDTTRC20";
         
-        // Сохраняем информацию о заказе
-        $this->saveOrderInfo($orderId, $serviceName, $priceThb, $priceUsd);
+        try {
+            // Используем реальный NOWPayments API для создания ссылки
+            $paymentUrl = $this->createNOWPaymentsInvoice($orderId, $priceUsd, $serviceName);
+            
+            // Сохраняем информацию о заказе
+            $this->saveOrderInfo($orderId, $serviceName, $priceThb, $priceUsd);
+            
+            return "Вот ссылка для оплаты: $paymentUrl\n\nУслуга: $serviceName\nСумма: $priceUsd USDT (USDTTRC20)\n\nПосле оплаты, пожалуйста, дайте мне знать, чтобы я мог создать QR-билет для входа!";
+            
+        } catch (Exception $e) {
+            error_log("Error creating payment link: " . $e->getMessage());
+            
+            // Fallback к простой ссылке
+            $paymentUrl = "https://nowpayments.io/payment?iid=" . $orderId . "&amount=" . $priceUsd . "&currency=USDTTRC20";
+            $this->saveOrderInfo($orderId, $serviceName, $priceThb, $priceUsd);
+            
+            return "Ссылка для оплаты: $paymentUrl\nУслуга: $serviceName\nСумма: $priceUsd USDT (USDTTRC20)";
+        }
+    }
+
+    /**
+     * Создание инвойса через NOWPayments API
+     */
+    private function createNOWPaymentsInvoice($orderId, $amountUsd, $serviceName)
+    {
+        $apiKey = NOWPAYMENTS_API_KEY;
+        $publicKey = NOWPAYMENTS_PUBLIC_KEY;
         
-        return "Ссылка для оплаты: $paymentUrl\nУслуга: $serviceName\nСумма: $priceUsd USDT (USDTTRC20)";
+        if (empty($apiKey) || empty($publicKey)) {
+            throw new Exception("NOWPayments API keys not configured");
+        }
+        
+        $data = [
+            'price_amount' => $amountUsd,
+            'price_currency' => 'usd',
+            'pay_currency' => 'usdttrc20',
+            'order_id' => $orderId,
+            'order_description' => $serviceName,
+            'ipn_callback_url' => 'https://winter-sauna-bot-phuket-f79605d5d044.herokuapp.com/crypto-webhook.php',
+            'case' => 'success'
+        ];
+        
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'https://api.nowpayments.io/v1/invoice');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json',
+            'x-api-key: ' . $apiKey,
+            'x-public-key: ' . $publicKey
+        ]);
+        
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $error = curl_error($ch);
+        curl_close($ch);
+        
+        if ($error) {
+            throw new Exception("cURL error: $error");
+        }
+        
+        if ($httpCode >= 400) {
+            throw new Exception("NOWPayments API error $httpCode: $response");
+        }
+        
+        $result = json_decode($response, true);
+        
+        // Возвращаем ссылку на оплату
+        if (isset($result['invoice_url'])) {
+            return $result['invoice_url'];
+        } elseif (isset($result['pay_url'])) {
+            return $result['pay_url'];
+        } else {
+            throw new Exception("No payment URL in response: " . $response);
+        }
     }
 
     /**
