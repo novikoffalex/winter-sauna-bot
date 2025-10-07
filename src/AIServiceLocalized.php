@@ -60,6 +60,8 @@ class AIServiceLocalized
             // Используем Assistant API вместо Chat Completions
             $chatId = $context['chat_id'] ?? null;
             $threadId = $this->getOrCreateThread($chatId);
+            
+            error_log("Using thread ID: " . $threadId . " for chat: " . $chatId);
 
             // Добавляем сообщение в тред
             $this->addMessageToThread($threadId, $userMessage);
@@ -72,6 +74,8 @@ class AIServiceLocalized
 
             // Получаем ответ
             $aiResponse = $this->getLastAssistantMessage($threadId);
+            
+            error_log("Assistant response: " . $aiResponse);
 
             // Сохраняем в локальную историю для совместимости
             if ($chatId) {
