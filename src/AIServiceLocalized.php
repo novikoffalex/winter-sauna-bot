@@ -470,7 +470,9 @@ class AIServiceLocalized
     {
         $orderData = [
             'order_id' => $orderId,
+            'service' => $serviceName,
             'service_name' => $serviceName,
+            'amount' => $priceUsd,
             'price_thb' => $priceThb,
             'price_usd' => $priceUsd,
             'currency' => 'USDTTRC20',

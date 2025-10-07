@@ -25,7 +25,7 @@ class TicketService
             'service' => $service,
             'amount' => $amount,
             'currency' => $currency,
-            'payment_id' => $paymentData['id'],
+            'payment_id' => $paymentData['payment_id'] ?? $paymentData['id'] ?? 'unknown',
             'created_at' => time(),
             'expires_at' => time() + (24 * 60 * 60), // 24 часа
             'status' => 'active',
