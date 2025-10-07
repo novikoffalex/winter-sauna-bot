@@ -62,6 +62,70 @@ if (isset($_GET['admin']) && $_GET['admin'] === 'send-qr') {
     exit;
 }
 
+// Эндпоинт для обновления инструкций ассистента OpenAI
+if (isset($_GET['admin']) && $_GET['admin'] === 'update-assistant') {
+    $token = $_GET['token'] ?? '';
+    if (!$token || $token !== ADMIN_TOKEN) {
+        http_response_code(401);
+        echo 'Unauthorized';
+        exit;
+    }
+
+    $assistantId = 'asst_XCmDp6s1aj9DhOnHVwrzQZXI';
+    $apiKey = OPENAI_API_KEY;
+    
+    if (empty($apiKey)) {
+        http_response_code(500);
+        echo 'OpenAI API key not configured';
+        exit;
+    }
+
+    // Загружаем русские инструкции
+    $prompts = json_decode(file_get_contents('ai_prompts.json'), true);
+    $instructions = $prompts['ru'] ?? 'You are Zima SPA Wellness Assistant.';
+
+    // Обновляем ассистента через OpenAI API
+    $url = "https://api.openai.com/v1/assistants/{$assistantId}";
+    $data = [
+        'instructions' => $instructions,
+        'model' => 'gpt-4o-mini',
+        'name' => 'Zima SPA Wellness Assistant',
+        'description' => 'AI Assistant for Zima SPA Wellness in Phuket - helps with booking, payments, and QR tickets'
+    ];
+
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+    curl_setopt($ch, CURLOPT_HTTPHEADER, [
+        'Content-Type: application/json',
+        'Authorization: Bearer ' . $apiKey,
+        'OpenAI-Beta: assistants=v2'
+    ]);
+
+    $response = curl_exec($ch);
+    $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $error = curl_error($ch);
+    curl_close($ch);
+
+    if ($error) {
+        http_response_code(500);
+        echo 'cURL error: ' . $error;
+        exit;
+    }
+
+    if ($httpCode >= 400) {
+        http_response_code($httpCode);
+        echo 'OpenAI API error: ' . $response;
+        exit;
+    }
+
+    $result = json_decode($response, true);
+    echo 'Assistant updated successfully! ID: ' . ($result['id'] ?? 'unknown');
+    exit;
+}
+
 // Иначе показываем информацию о боте
 ?>
 <!DOCTYPE html>
