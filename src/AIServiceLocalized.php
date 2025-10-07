@@ -14,6 +14,7 @@ class AIServiceLocalized
     private $assistantId;
     private $localization;
     private $store;
+    private $currentChatId;
 
     public function __construct($userLanguage = 'en')
     {
@@ -59,6 +60,7 @@ class AIServiceLocalized
 
             // Используем Assistant API вместо Chat Completions
             $chatId = $context['chat_id'] ?? null;
+            $this->currentChatId = $chatId; // Сохраняем для использования в функциях
             $threadId = $this->getOrCreateThread($chatId);
             
             error_log("Using thread ID: " . $threadId . " for chat: " . $chatId);
@@ -349,7 +351,7 @@ class AIServiceLocalized
     {
         switch ($functionName) {
             case 'create_payment_link':
-                return $this->createPaymentLink($arguments['service_name'], $arguments['price_thb']);
+                return $this->createPaymentLink($arguments['service_name'], $arguments['price_thb'], $this->currentChatId);
             
             case 'create_qr_ticket':
                 return $this->createQrTicket($arguments['order_id']);
@@ -362,7 +364,7 @@ class AIServiceLocalized
     /**
      * Создание ссылки на оплату
      */
-    private function createPaymentLink($serviceName, $priceThb)
+    private function createPaymentLink($serviceName, $priceThb, $chatId = null)
     {
         // Конвертируем THB в USD
         $priceUsd = $priceThb * 0.027; // Примерный курс
@@ -380,7 +382,7 @@ class AIServiceLocalized
             $paymentUrl = $this->createNOWPaymentsInvoice($orderId, $priceUsd, $serviceName);
             
             // Сохраняем информацию о заказе
-            $this->saveOrderInfo($orderId, $serviceName, $priceThb, $priceUsd);
+            $this->saveOrderInfo($orderId, $serviceName, $priceThb, $priceUsd, $chatId);
             
             return "PAYMENT_LINK|$serviceName|$priceUsd|$paymentUrl";
             
@@ -389,7 +391,7 @@ class AIServiceLocalized
             
             // Fallback к простой ссылке
             $paymentUrl = "https://nowpayments.io/payment?iid=" . $orderId . "&amount=" . $priceUsd . "&currency=USDTTRC20";
-            $this->saveOrderInfo($orderId, $serviceName, $priceThb, $priceUsd);
+            $this->saveOrderInfo($orderId, $serviceName, $priceThb, $priceUsd, $chatId);
             
             return "Ссылка для оплаты: $paymentUrl\nУслуга: $serviceName\nСумма: $priceUsd USDT (USDTTRC20)";
         }
@@ -464,7 +466,7 @@ class AIServiceLocalized
     /**
      * Сохранение информации о заказе
      */
-    private function saveOrderInfo($orderId, $serviceName, $priceThb, $priceUsd)
+    private function saveOrderInfo($orderId, $serviceName, $priceThb, $priceUsd, $chatId = null)
     {
         $orderData = [
             'order_id' => $orderId,
@@ -473,6 +475,7 @@ class AIServiceLocalized
             'price_usd' => $priceUsd,
             'currency' => 'USDTTRC20',
             'status' => 'pending',
+            'chat_id' => $chatId,
             'created_at' => date('Y-m-d H:i:s')
         ];
         

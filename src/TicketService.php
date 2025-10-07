@@ -197,12 +197,12 @@ class TicketService
     private function generateQRImage($content)
     {
         try {
-            // Используем Simple QR Code для генерации QR-кода
+            // Используем Simple QR Code для генерации QR-кода в SVG формате
             $qrCode = new \SimpleSoftwareIO\QrCode\Generator();
-            $qrCode->size(300)->margin(10)->format('png');
+            $qrCode->size(300)->margin(10)->format('svg');
             
             // Сохраняем QR-код во временный файл
-            $tempFile = 'data/qr_' . time() . '.png';
+            $tempFile = 'data/qr_' . time() . '.svg';
             if (!file_exists('data')) {
                 mkdir('data', 0755, true);
             }
