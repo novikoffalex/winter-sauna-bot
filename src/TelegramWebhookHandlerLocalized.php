@@ -148,7 +148,7 @@ class TelegramWebhookHandlerLocalized
                 break;
                 
             case '/services':
-                $this->sendServicesInfo($chatId, $messageId);
+                $this->sendSimpleServicesInfo($chatId, $messageId);
                 break;
                 
             case '/booking':
@@ -252,7 +252,7 @@ class TelegramWebhookHandlerLocalized
                 $this->sendPricesInfo($chatId);
                 break;
             case 'show_services':
-                $this->sendServicesInfo($chatId);
+                $this->sendSimpleServicesInfo($chatId);
                 break;
             case 'start_booking':
                 $this->startBookingProcess($chatId);
@@ -300,30 +300,60 @@ class TelegramWebhookHandlerLocalized
      */
     private function sendWelcomeMessage($chatId, $messageId = null)
     {
-        $message = $this->localization->getWelcomeMessage();
-
-        $keyboard = [
-            'inline_keyboard' => [
-                [
-                    ['text' => '🏊‍♀️ ' . $this->localization->t('view_services'), 'callback_data' => 'show_services'],
-                    ['text' => '💰 ' . $this->localization->t('view_prices'), 'callback_data' => 'show_prices']
-                ],
-                [
-                    ['text' => '📅 ' . $this->localization->t('book_now'), 'callback_data' => 'start_booking'],
-                    ['text' => '🎤 ' . $this->localization->t('voice_booking'), 'callback_data' => 'voice_booking_info']
-                ],
-                // Удалено: кнопка тестовой оплаты
-                [
-                    ['text' => '📍 ' . $this->localization->t('contact_info'), 'callback_data' => 'show_contacts']
-                ]
-            ]
-        ];
-
-        $this->telegramService->sendMessageWithKeyboard($chatId, $message, $keyboard, $messageId);
+        $message = "Добро пожаловать в Zima SPA Wellness!\n\nЯ ваш голосовой помощник. Просто скажите, что вас интересует:\n\n• Список услуг\n• Бронирование\n• Цены\n• Контакты\n\nГоворите со мной голосом или текстом!";
+        
+        $this->telegramService->sendMessage($chatId, $message, $messageId);
     }
 
     /**
-     * Отправка информации об услугах
+     * Отправка простого списка услуг без кнопок
+     */
+    private function sendSimpleServicesInfo($chatId, $messageId = null)
+    {
+        $data = $this->localization->getZimaData();
+        $services = $data['services'] ?? [];
+
+        $message = "Наши услуги:\n\n";
+        
+        $steamingServices = [];
+        $massageServices = [];
+        
+        foreach ($services as $service) {
+            $name = $service['name_' . $this->localization->getLanguage()] ?? $service['name_ru'];
+            $priceThb = $service['price'];
+            $category = $service['category'];
+            
+            $serviceText = "$name — $priceThb бат";
+            
+            if ($category === 'steaming') {
+                $steamingServices[] = $serviceText;
+            } else {
+                $massageServices[] = $serviceText;
+            }
+        }
+        
+        if (!empty($steamingServices)) {
+            $message .= "Парения:\n";
+            foreach ($steamingServices as $service) {
+                $message .= "• $service\n";
+            }
+            $message .= "\n";
+        }
+        
+        if (!empty($massageServices)) {
+            $message .= "Массажи и процедуры:\n";
+            foreach ($massageServices as $service) {
+                $message .= "• $service\n";
+            }
+        }
+        
+        $message .= "\nСкажите название услуги для бронирования.";
+
+        $this->telegramService->sendMessage($chatId, $message, $messageId);
+    }
+
+    /**
+     * Отправка информации об услугах (старый метод с кнопками)
      */
     private function sendServicesInfo($chatId, $messageId = null)
     {
@@ -616,10 +646,10 @@ class TelegramWebhookHandlerLocalized
 
         // Если не распознана услуга — сначала показать список услуг и короткую подсказку
         if (empty($analysis['service'])) {
-            $this->sendServicesInfo($chatId, $messageId);
+            $this->sendSimpleServicesInfo($chatId, $messageId);
             $hint = $language === 'ru'
-                ? "🎤 Выберите услугу кнопкой выше, затем скажите дату и время (например: ‘завтра в 19:00’) и количество гостей."
-                : "🎤 Choose a service above, then say the date and time (e.g. ‘tomorrow at 7 PM’) and number of guests.";
+                ? "Скажите название услуги, дату и время (например: 'завтра в 19:00') и количество гостей."
+                : "Say the service name, date and time (e.g. 'tomorrow at 7 PM') and number of guests.";
             $this->telegramService->sendMessage($chatId, $hint);
             return;
         }
