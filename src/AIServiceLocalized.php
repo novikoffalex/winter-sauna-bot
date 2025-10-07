@@ -413,8 +413,7 @@ class AIServiceLocalized
             'pay_currency' => 'usdttrc20',
             'order_id' => $orderId,
             'order_description' => $serviceName,
-            'ipn_callback_url' => 'https://winter-sauna-bot-phuket-f79605d5d044.herokuapp.com/crypto-webhook.php',
-            'case' => 'success'
+            'ipn_callback_url' => 'https://winter-sauna-bot-phuket-f79605d5d044.herokuapp.com/crypto-webhook.php'
         ];
         
         $ch = curl_init();
