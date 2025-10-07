@@ -255,6 +255,7 @@ class AIServiceLocalized
      */
     private function addMessageToThread($threadId, $content)
     {
+        error_log("Adding message to thread {$threadId}: " . $content);
         $this->makeRequest("/threads/{$threadId}/messages", [
             'role' => 'user',
             'content' => $content
@@ -307,10 +308,13 @@ class AIServiceLocalized
         $response = $this->makeRequest("/threads/{$threadId}/messages");
         $messages = $response['data'] ?? [];
         
+        error_log("Thread {$threadId} has " . count($messages) . " messages");
+        
         // Ищем последнее сообщение от ассистента
         for ($i = count($messages) - 1; $i >= 0; $i--) {
             if ($messages[$i]['role'] === 'assistant') {
                 $content = $messages[$i]['content'][0]['text']['value'] ?? '';
+                error_log("Found assistant message: " . $content);
                 return $content;
             }
         }
