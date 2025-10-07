@@ -87,6 +87,8 @@ class TranscriptionService
             if ($error) {
                 throw new Exception("cURL error: $error");
             }
+            
+            error_log("Whisper API response: HTTP $httpCode, Body: $response");
 
             if ($httpCode >= 400) {
                 throw new Exception("HTTP error $httpCode: $response");

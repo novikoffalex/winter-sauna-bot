@@ -538,6 +538,8 @@ class TelegramWebhookHandlerLocalized
             $audioData = $transcriptionService->getVoiceFile($voice['file_id']);
             $transcription = $transcriptionService->transcribeAudio($audioData, $userLanguage);
             
+            error_log("Voice transcription result: " . $transcription);
+            
             if (empty($transcription)) {
                 $this->telegramService->sendMessage(
                     $chatId,
