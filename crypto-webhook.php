@@ -58,6 +58,37 @@ try {
             error_log("Payment failed for order: " . $orderId . " Status: " . $status);
             http_response_code(200);
             echo json_encode(['status' => 'acknowledged']);
+        } elseif ($status === 'waiting') {
+            // Для статуса "waiting" проверяем, есть ли уже заказ и обрабатываем его
+            error_log("Payment waiting for order: " . $orderId . " - checking if order exists");
+            
+            // Проверяем, есть ли заказ в базе данных
+            $orderFile = 'data/orders.json';
+            if (file_exists($orderFile)) {
+                $orders = json_decode(file_get_contents($orderFile), true);
+                if (isset($orders[$orderId])) {
+                    error_log("Order found for waiting payment, processing as successful");
+                    $result = $paymentHandler->handleSuccessfulPayment($data);
+                    
+                    if ($result['success']) {
+                        error_log("Waiting payment processed successfully: " . $result['ticket_id']);
+                        http_response_code(200);
+                        echo json_encode(['status' => 'success']);
+                    } else {
+                        error_log("Waiting payment processing failed: " . $result['error']);
+                        http_response_code(500);
+                        echo json_encode(['error' => $result['error']]);
+                    }
+                } else {
+                    error_log("Order not found for waiting payment: " . $orderId);
+                    http_response_code(200);
+                    echo json_encode(['status' => 'ignored']);
+                }
+            } else {
+                error_log("Orders file not found");
+                http_response_code(200);
+                echo json_encode(['status' => 'ignored']);
+            }
         } else {
             error_log("Unknown NOWPayments status: " . $status);
             http_response_code(200);
