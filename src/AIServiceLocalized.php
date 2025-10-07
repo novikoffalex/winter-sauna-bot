@@ -20,7 +20,7 @@ class AIServiceLocalized
         $this->apiKey = OPENAI_API_KEY;
         $this->model = OPENAI_MODEL;
         $this->baseUrl = 'https://api.openai.com/v1';
-        $this->assistantId = 'asst_XCmDp6s1aj9DhOnHVwrzQZXI';
+        $this->assistantId = $_ENV['OPENAI_ASSISTANT_ID'] ?? 'asst_XCmDp6s1aj9DhOnHVwrzQZXI';
         $this->localization = new LocalizationService($userLanguage);
         $this->store = new ConversationStore();
     }
@@ -34,7 +34,7 @@ class AIServiceLocalized
             throw new Exception('OpenAI API key is required');
         }
 
-        error_log('AI service initialized with model: ' . $this->model . ', language: ' . $this->localization->getLanguage());
+        error_log('AI service initialized with model: ' . $this->model . ', language: ' . $this->localization->getLanguage() . ', assistant: ' . $this->assistantId);
     }
 
     /**
