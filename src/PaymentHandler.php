@@ -151,12 +151,22 @@ class PaymentHandler
         $message .= "1. " . $this->localization->t('show_qr_at_entrance') . "\n";
         $message .= "2. " . $this->localization->t('scan_qr_code') . "\n";
         $message .= "3. " . $this->localization->t('enjoy_service') . "\n\n";
-        $message .= "⚠️ " . $this->localization->t('ticket_valid_24h') . "\n\n";
-        $message .= "🌐 **" . $this->localization->t('open_ticket') . ":**\n";
-        $message .= "[📱 " . $this->localization->t('view_ticket_online') . "](" . $ticketUrl . ")";
+        $message .= "⚠️ " . $this->localization->t('ticket_valid_24h');
 
-        // Отправляем сообщение со ссылкой на билет
-        $this->telegramService->sendMessage($chatId, $message);
+        // Создаем кнопку для просмотра билета
+        $keyboard = [
+            'inline_keyboard' => [
+                [
+                    [
+                        'text' => '🎫 ' . $this->localization->t('view_ticket_online'),
+                        'url' => $ticketUrl
+                    ]
+                ]
+            ]
+        ];
+
+        // Отправляем сообщение с кнопкой
+        $this->telegramService->sendMessageWithKeyboard($chatId, $message, $keyboard);
 
         // Дополнительная информация убрана - все в одном сообщении
     }
