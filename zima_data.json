@@ -9,8 +9,8 @@
         {
             "name_ru": "2 сессии — Парение всего тела (обе стороны)",
             "name_en": "2 Session – Full-Body Steaming (Both Sides)",
-            "description_ru": "Полное парение тела с обеих сторон в течение 2 сессий",
-            "description_en": "Full-body steaming on both sides for 2 sessions",
+            "description_ru": "Полное парение тела с обеих сторон в течение 2 сессий. Процедура начинается с постепенного прогревания от ступней до головы с использованием традиционных травяных сборов. Первая сессия - мягкий прогрев с температурой 45-50°C, вторая сессия - более интенсивный прогрев 50-55°C. Травяные пары содержат эвкалипт, лаванду, ромашку и мяту, что обеспечивает глубокое расслабление мышц, улучшение кровообращения и детоксикацию организма. Идеально подходит для снятия стресса, улучшения сна и общего оздоровления.",
+            "description_en": "Full-body steaming on both sides for 2 sessions. The procedure begins with gradual heating from feet to head using traditional herbal blends. First session - gentle warming at 45-50°C, second session - more intensive warming at 50-55°C. Herbal vapors contain eucalyptus, lavender, chamomile and mint, providing deep muscle relaxation, improved circulation and body detoxification. Perfect for stress relief, better sleep and overall wellness.",
             "price": 3000,
             "currency": "THB",
             "duration": "30 мин",
@@ -19,8 +19,8 @@
         {
             "name_ru": "1 сессия — Парение всего тела (обе стороны) в приватной сауне",
             "name_en": "1 Session – Full-Body Steaming (Both Sides) in Private sauna room",
-            "description_ru": "Полное парение тела с обеих сторон в приватной сауне",
-            "description_en": "Full-body steaming on both sides in private sauna room",
+            "description_ru": "Индивидуальное парение в приватной сауне с полным контролем температуры и травяных добавок. Процедура проводится в изолированной комнате с температурой 50-55°C и влажностью 40-50%. Используется специальная травяная смесь из эвкалипта, розмарина и лаванды. Мастер контролирует процесс, обеспечивая максимальный комфорт и безопасность. Идеально для тех, кто предпочитает уединение и персонализированный подход.",
+            "description_en": "Individual steaming in a private sauna with full control over temperature and herbal additives. The procedure is carried out in an isolated room at 50-55°C with 40-50% humidity. Special herbal blend of eucalyptus, rosemary and lavender is used. The master controls the process, ensuring maximum comfort and safety. Perfect for those who prefer privacy and personalized approach.",
             "price": 2000,
             "currency": "THB",
             "duration": "15 мин",
@@ -29,8 +29,8 @@
         {
             "name_ru": "Парение всего тела (обе стороны) в основной сауне",
             "name_en": "Full-Body Steaming (Both Sides) in Main Sauna room",
-            "description_ru": "Полное парение тела с обеих сторон в основной сауне",
-            "description_en": "Full-body steaming on both sides in main sauna room",
+            "description_ru": "Традиционное парение в основной сауне с использованием классических методов и травяных сборов. Температура 55-60°C, влажность 30-40%. Процедура включает контрастные обливания прохладной водой для усиления эффекта. Используется смесь из мяты, эвкалипта и чабреца. Отлично подходит для детоксикации, улучшения иммунитета и снятия усталости.",
+            "description_en": "Traditional steaming in the main sauna using classical methods and herbal blends. Temperature 55-60°C, humidity 30-40%. The procedure includes contrast dousing with cool water to enhance the effect. A blend of mint, eucalyptus and thyme is used. Excellent for detoxification, immunity improvement and fatigue relief.",
             "price": 1500,
             "currency": "THB",
             "duration": "15 мин",
@@ -39,8 +39,8 @@
         {
             "name_ru": "Арома‑парение в приватной комнате",
             "name_en": "Aroma steaming in private room",
-            "description_ru": "Арома-парение - мягкое ароматное парение в индивидуальной комнате",
-            "description_en": "Aroma steaming - gentle aromatic steaming in private room",
+            "description_ru": "Мягкое ароматерапевтическое парение с использованием эфирных масел лаванды, иланг-иланга и бергамота. Температура 45-50°C, низкая влажность. Процедура направлена на глубокое расслабление нервной системы, снятие стресса и улучшение эмоционального состояния. Включает дыхательные упражнения и медитативные практики.",
+            "description_en": "Gentle aromatherapeutic steaming using essential oils of lavender, ylang-ylang and bergamot. Temperature 45-50°C, low humidity. The procedure is aimed at deep relaxation of the nervous system, stress relief and improvement of emotional state. Includes breathing exercises and meditative practices.",
             "price": 1000,
             "currency": "THB",
             "duration": "15 мин",
@@ -49,8 +49,8 @@
         {
             "name_ru": "Парение «Сталевара»",
             "name_en": "Steelworker's Steaming",
-            "description_ru": "Интенсивное парение для глубокого прогрева",
-            "description_en": "Intensive steaming for deep heating",
+            "description_ru": "Интенсивная процедура парения для опытных пользователей. Температура 60-65°C с постепенным повышением. Используется специальная травяная смесь с добавлением хвойных экстрактов и морской соли. Процедура включает несколько циклов прогрева и охлаждения. Эффективно снимает мышечные зажимы, улучшает кровообращение и способствует глубокой детоксикации.",
+            "description_en": "Intensive steaming procedure for experienced users. Temperature 60-65°C with gradual increase. Special herbal blend with coniferous extracts and sea salt is used. The procedure includes several cycles of heating and cooling. Effectively relieves muscle tension, improves circulation and promotes deep detoxification.",
             "price": 4000,
             "currency": "THB",
             "duration": "40 мин",
@@ -59,8 +59,8 @@
         {
             "name_ru": "1 сессия — Парение спины (одна сторона)",
             "name_en": "1 Session – Back Steaming (one side)",
-            "description_ru": "Постепенное прогревание от ног до головы с повышением температуры",
-            "description_en": "Gradual warming from feet to head with increasing temperature",
+            "description_ru": "Целевое парение спины с акцентом на шейно-воротниковую зону и поясницу. Температура 50-55°C. Используется специальная травяная смесь из розмарина, можжевельника и эвкалипта. Процедура включает массажные элементы и растяжку. Идеально для снятия напряжения после рабочего дня, улучшения осанки и лечения болей в спине.",
+            "description_en": "Targeted back steaming with focus on neck-collar zone and lower back. Temperature 50-55°C. Special herbal blend of rosemary, juniper and eucalyptus is used. The procedure includes massage elements and stretching. Perfect for relieving tension after work day, improving posture and treating back pain.",
             "price": 1000,
             "currency": "THB",
             "duration": "10 мин",
@@ -69,8 +69,8 @@
         {
             "name_ru": "Горячий масляный массаж 1 час",
             "name_en": "Hot Oil Massage 1 Hour",
-            "description_ru": "Терапевтический массаж тела, сочетающий преимущества массажа с целебными свойствами нагретых масел",
-            "description_en": "A therapeutic bodywork treatment that combines the benefits of massage with the therapeutic properties of warmed oils",
+            "description_ru": "Терапевтический массаж с использованием теплых ароматических масел (кокосовое, жожоба, миндальное). Техника включает глубокие поглаживания, разминания и растяжки. Масла подогреваются до 38-40°C для максимального расслабления мышц и улучшения проникновения активных веществ. Процедура снимает стресс, улучшает кровообращение, увлажняет и питает кожу.",
+            "description_en": "Therapeutic massage using warm aromatic oils (coconut, jojoba, almond). Technique includes deep strokes, kneading and stretching. Oils are heated to 38-40°C for maximum muscle relaxation and improved penetration of active substances. The procedure relieves stress, improves circulation, moisturizes and nourishes the skin.",
             "price": 750,
             "currency": "THB",
             "duration": "1 час",
@@ -79,8 +79,8 @@
         {
             "name_ru": "Тайский масляный массаж 1 час",
             "name_en": "Thai oil massage 1 Hour",
-            "description_ru": "Сочетает традиционный тайский массаж с техниками акупрессуры, растяжки и скручивания",
-            "description_en": "Combines traditional Thai massage, using acupressure, stretching and twisting techniques",
+            "description_ru": "Классический тайский массаж на полу с использованием собственного веса мастера. Включает акупрессуру по энергетическим линиям (сен), пассивную йогу и растяжки. Работа ведется без масла, через одежду. Процедура восстанавливает энергетический баланс, улучшает гибкость суставов и снимает мышечное напряжение.",
+            "description_en": "Classical Thai massage on the floor using the master's body weight. Includes acupressure along energy lines (sen), passive yoga and stretching. Work is done without oil, through clothing. The procedure restores energy balance, improves joint flexibility and relieves muscle tension.",
             "price": 500,
             "currency": "THB",
             "duration": "1 час",
@@ -89,8 +89,8 @@
         {
             "name_ru": "Массаж офисного синдрома 1 час",
             "name_en": "Office Syndrome Massage 1 hour",
-            "description_ru": "С маслом и тайским горячим травяным бальзамом. Фокус на спине, шее и плечах",
-            "description_en": "With oil and Thai hot herbal balm. Focus on the back, neck and shoulders",
+            "description_ru": "Специализированный массаж для офисных работников с использованием теплого масла и тайского травяного бальзама. Акцент на шейно-воротниковой зоне, плечах, пояснице и кистях рук. Техника включает глубокие разминания, акупрессуру и теплые компрессы. Эффективно снимает напряжение от длительной работы за компьютером.",
+            "description_en": "Specialized massage for office workers using warm oil and Thai herbal balm. Focus on neck-collar zone, shoulders, lower back and hands. Technique includes deep kneading, acupressure and warm compresses. Effectively relieves tension from prolonged computer work.",
             "price": 500,
             "currency": "THB",
             "duration": "1 час",
@@ -99,8 +99,8 @@
         {
             "name_ru": "Глубокий тканевый массаж 1 час",
             "name_en": "Deep Tissue Massage 1 Hour",
-            "description_ru": "Массаж глубоко в мышечный слой, снимая узлы, накопленные от стресса и перенапряжения",
-            "description_en": "Massage deep into the muscle layer, releasing knots accumulated from stress and overuse",
+            "description_ru": "Интенсивный массаж глубоких слоев мышц с использованием техник миофасциального релиза. Работа с триггерными точками, спайками и мышечными узлами. Применяется давление локтями, предплечьями и специальными инструментами. Процедура болезненная, но очень эффективная для лечения хронических болей и восстановления после травм.",
+            "description_en": "Intensive deep tissue massage using myofascial release techniques. Work with trigger points, adhesions and muscle knots. Pressure is applied with elbows, forearms and special tools. The procedure is painful but very effective for treating chronic pain and recovery from injuries.",
             "price": 750,
             "currency": "THB",
             "duration": "1 час",
@@ -109,8 +109,8 @@
         {
             "name_ru": "Лечение Алоэ Вера 1 час",
             "name_en": "Aloe Vera Treatment 1 Hour",
-            "description_ru": "Лечит, увлажняет и укрепляет кожу. Приносит комфорт и расслабление",
-            "description_en": "Heals, moisturizes and strengthens the skin. Brings comfort and relaxation",
+            "description_ru": "Лечебная процедура с использованием свежего геля алоэ вера. Начинается с мягкого пилинга, затем нанесение охлаждающего геля алоэ с легким массажем. Процедура включает компрессы и маску с алоэ. Эффективно лечит солнечные ожоги, воспаления кожи, увлажняет и омолаживает. Особенно полезна после парения и длительного пребывания на солнце.",
+            "description_en": "Therapeutic procedure using fresh aloe vera gel. Begins with gentle peeling, then application of cooling aloe gel with light massage. The procedure includes compresses and aloe mask. Effectively treats sunburn, skin inflammation, moisturizes and rejuvenates. Especially beneficial after steaming and prolonged sun exposure.",
             "price": 750,
             "currency": "THB",
             "duration": "1 час",
@@ -119,8 +119,8 @@
         {
             "name_ru": "Традиционный тайский массаж 1 час",
             "name_en": "Traditional Thai Massage 1 Hour",
-            "description_ru": "Расслабьтесь с древней наукой, помогите расслабить мышцы, снять боли, стимулировать кровообращение",
-            "description_en": "Relax with ancient science, help relax muscles, relieve aches and pains, stimulate blood circulation",
+            "description_ru": "Аутентичный тайский массаж по древним традициям. Включает работу с энергетическими меридианами, пассивную йогу и медитативные техники. Мастер использует ладони, локти, колени и стопы для воздействия на все тело. Процедура восстанавливает циркуляцию энергии, улучшает подвижность и приносит глубокое расслабление.",
+            "description_en": "Authentic Thai massage according to ancient traditions. Includes work with energy meridians, passive yoga and meditative techniques. The master uses palms, elbows, knees and feet to work on the whole body. The procedure restores energy circulation, improves mobility and brings deep relaxation.",
             "price": 500,
             "currency": "THB",
             "duration": "1 час",
@@ -129,12 +129,311 @@
         {
             "name_ru": "Ароматерапевтический массаж",
             "name_en": "Aromatherapy massage",
-            "description_ru": "Ощутите расслабление в каждом массаже. Снизьте стресс, снимите усталость с натуральными эфирными маслами",
-            "description_en": "Experience relaxation in every massage. Reduce stress, relieve fatigue with natural essential oils",
+            "description_ru": "Терапевтический массаж с индивидуально подобранными эфирными маслами (лаванда, роза, иланг-иланг, бергамот). Процедура начинается с аромадиагностики для выбора подходящих масел. Техника включает легкие поглаживания, круговые движения и точечное воздействие. Оказывает мощное воздействие на эмоциональное состояние, снимает тревожность и улучшает сон.",
+            "description_en": "Therapeutic massage with individually selected essential oils (lavender, rose, ylang-ylang, bergamot). The procedure begins with aroma diagnosis to choose suitable oils. Technique includes light strokes, circular movements and point impact. Has a powerful effect on emotional state, relieves anxiety and improves sleep.",
             "price": 500,
             "currency": "THB",
             "duration": "1 час",
             "category": "massage"
+        }
+    ],
+    "bar_menu": [
+        {
+            "name_ru": "Тар-тар из лосося с кремом авокадо",
+            "name_en": "Salmon tartare with avocado cream",
+            "description_ru": "Свежий лосось с нежным кремом из авокадо",
+            "description_en": "Fresh salmon with delicate avocado cream",
+            "price": 450,
+            "currency": "THB",
+            "category": "light_snacks"
+        },
+        {
+            "name_ru": "Томаты сан-марцоне с кремом из феты и соусом чимичури",
+            "name_en": "San Marzano tomatoes with feta cream and chimichurri sauce",
+            "description_ru": "Сочные томаты с нежным кремом феты",
+            "description_en": "Juicy tomatoes with delicate feta cream",
+            "price": 320,
+            "currency": "THB",
+            "category": "light_snacks"
+        },
+        {
+            "name_ru": "Тар-Тар из говядины с пармезаном",
+            "name_en": "Beef tartare with Parmesan",
+            "description_ru": "Нежная говядина с тертым пармезаном",
+            "description_en": "Tender beef with grated Parmesan",
+            "price": 480,
+            "currency": "THB",
+            "category": "light_snacks"
+        },
+        {
+            "name_ru": "Севиче из лосося с трюфельным понзу",
+            "name_en": "Salmon ceviche with truffle ponzu",
+            "description_ru": "Маринованный лосось с трюфельным соусом",
+            "description_en": "Marinated salmon with truffle sauce",
+            "price": 420,
+            "currency": "THB",
+            "category": "light_snacks"
+        },
+        {
+            "name_ru": "Креветки темпура с васаби и дайконом",
+            "name_en": "Tempura shrimp with wasabi and daikon",
+            "description_ru": "Хрустящие креветки в темпуре с острым васаби",
+            "description_en": "Crispy tempura shrimp with spicy wasabi",
+            "price": 380,
+            "currency": "THB",
+            "category": "light_snacks"
+        },
+        {
+            "name_ru": "Брускетта с лососем и авокадо",
+            "name_en": "Bruschetta with salmon and avocado",
+            "description_ru": "Хрустящий хлеб с лососем и авокадо",
+            "description_en": "Crispy bread with salmon and avocado",
+            "price": 280,
+            "currency": "THB",
+            "category": "bruschettas"
+        },
+        {
+            "name_ru": "Брускетта с уткой и огурцом",
+            "name_en": "Bruschetta with duck and cucumber",
+            "description_ru": "Нежная утка с свежим огурцом",
+            "description_en": "Tender duck with fresh cucumber",
+            "price": 320,
+            "currency": "THB",
+            "category": "bruschettas"
+        },
+        {
+            "name_ru": "Ассорти брускет 6 шт",
+            "name_en": "Assorted bruschettas 6 pcs",
+            "description_ru": "Разнообразные брускетты на выбор",
+            "description_en": "Various bruschettas to choose from",
+            "price": 450,
+            "currency": "THB",
+            "category": "bruschettas"
+        },
+        {
+            "name_ru": "Лосось, киноа, авокадо",
+            "name_en": "Salmon, quinoa, avocado",
+            "description_ru": "Питательный салат с лососем и киноа",
+            "description_en": "Nutritious salad with salmon and quinoa",
+            "price": 380,
+            "currency": "THB",
+            "category": "salads"
+        },
+        {
+            "name_ru": "Цезарь с креветкой, курицей",
+            "name_en": "Caesar with shrimp, chicken",
+            "description_ru": "Классический салат цезарь с морепродуктами",
+            "description_en": "Classic Caesar salad with seafood",
+            "price": 350,
+            "currency": "THB",
+            "category": "salads"
+        },
+        {
+            "name_ru": "Греческий салат с топинадой из оливок",
+            "name_en": "Greek salad with olive tapenade",
+            "description_ru": "Свежие овощи с оливковой пастой",
+            "description_en": "Fresh vegetables with olive paste",
+            "price": 280,
+            "currency": "THB",
+            "category": "salads"
+        },
+        {
+            "name_ru": "Крем суп из кабачка со страчателлой",
+            "name_en": "Zucchini cream soup with stracciatella",
+            "description_ru": "Нежный крем-суп с сыром страчателла",
+            "description_en": "Delicate cream soup with stracciatella cheese",
+            "price": 220,
+            "currency": "THB",
+            "category": "soups"
+        },
+        {
+            "name_ru": "Томатный гаспачо с креветками",
+            "name_en": "Tomato gazpacho with shrimp",
+            "description_ru": "Охлажденный томатный суп с креветками",
+            "description_en": "Chilled tomato soup with shrimp",
+            "price": 250,
+            "currency": "THB",
+            "category": "soups"
+        },
+        {
+            "name_ru": "Домашняя паста с баклажаном, томатами и страчателлой",
+            "name_en": "Homemade pasta with eggplant, tomatoes and stracciatella",
+            "description_ru": "Свежая паста с овощами и сыром",
+            "description_en": "Fresh pasta with vegetables and cheese",
+            "price": 320,
+            "currency": "THB",
+            "category": "pasta"
+        },
+        {
+            "name_ru": "Классическая паста карбонара с сыром пекарино",
+            "name_en": "Classic carbonara pasta with Pecorino cheese",
+            "description_ru": "Традиционная карбонара с пекарино",
+            "description_en": "Traditional carbonara with Pecorino",
+            "price": 350,
+            "currency": "THB",
+            "category": "pasta"
+        },
+        {
+            "name_ru": "Равиолли со шпинатом и рикоттой",
+            "name_en": "Ravioli with spinach and ricotta",
+            "description_ru": "Нежные равиолли с начинкой из шпината",
+            "description_en": "Delicate ravioli with spinach filling",
+            "price": 380,
+            "currency": "THB",
+            "category": "pasta"
+        },
+        {
+            "name_ru": "Половинка цыпленка с картофельным пюре и соусом чимичури",
+            "name_en": "Half chicken with mashed potatoes and chimichurri sauce",
+            "description_ru": "Запеченная курица с пюре и аргентинским соусом",
+            "description_en": "Roasted chicken with mashed potatoes and Argentine sauce",
+            "price": 450,
+            "currency": "THB",
+            "category": "main_courses"
+        },
+        {
+            "name_ru": "Стейк лосося с авокадо и шпинатом",
+            "name_en": "Salmon steak with avocado and spinach",
+            "description_ru": "Сочный стейк лосося с зеленью",
+            "description_en": "Juicy salmon steak with greens",
+            "price": 520,
+            "currency": "THB",
+            "category": "main_courses"
+        },
+        {
+            "name_ru": "Томлёная говядина с гречкой и соусом демигляс",
+            "name_en": "Braised beef with buckwheat and demi-glace sauce",
+            "description_ru": "Мягкая говядина с гречкой и классическим соусом",
+            "description_en": "Tender beef with buckwheat and classic sauce",
+            "price": 480,
+            "currency": "THB",
+            "category": "main_courses"
+        },
+        {
+            "name_ru": "Сувлаки из говядины с мятым картофелем и маринованным луком",
+            "name_en": "Beef souvlaki with smashed potatoes and pickled onions",
+            "description_ru": "Греческие шашлыки из говядины",
+            "description_en": "Greek beef kebabs",
+            "price": 420,
+            "currency": "THB",
+            "category": "grill"
+        },
+        {
+            "name_ru": "Сувлаки из свинины с томатами ким-чи",
+            "name_en": "Pork souvlaki with kimchi tomatoes",
+            "description_ru": "Свиные шашлыки с острой корейской капустой",
+            "description_en": "Pork kebabs with spicy Korean cabbage",
+            "price": 380,
+            "currency": "THB",
+            "category": "grill"
+        },
+        {
+            "name_ru": "Чизкейк сан-себастьян",
+            "name_en": "San Sebastian cheesecake",
+            "description_ru": "Кремовый чизкейк в испанском стиле",
+            "description_en": "Creamy cheesecake in Spanish style",
+            "price": 280,
+            "currency": "THB",
+            "category": "desserts"
+        },
+        {
+            "name_ru": "Каноли с фисташковым кремом",
+            "name_en": "Cannoli with pistachio cream",
+            "description_ru": "Хрустящие трубочки с фисташковым кремом",
+            "description_en": "Crispy tubes with pistachio cream",
+            "price": 320,
+            "currency": "THB",
+            "category": "desserts"
+        },
+        {
+            "name_ru": "Шоколадный тарт с миндальным кремом",
+            "name_en": "Chocolate tart with almond cream",
+            "description_ru": "Шоколадный тарт с нежным миндальным кремом",
+            "description_en": "Chocolate tart with delicate almond cream",
+            "price": 350,
+            "currency": "THB",
+            "category": "desserts"
+        },
+        {
+            "name_ru": "Свежевыжатый апельсиновый сок",
+            "name_en": "Fresh orange juice",
+            "description_ru": "Свежий апельсиновый сок",
+            "description_en": "Fresh orange juice",
+            "price": 120,
+            "currency": "THB",
+            "category": "beverages"
+        },
+        {
+            "name_ru": "Кокосовая вода",
+            "name_en": "Coconut water",
+            "description_ru": "Освежающая кокосовая вода",
+            "description_en": "Refreshing coconut water",
+            "price": 100,
+            "currency": "THB",
+            "category": "beverages"
+        },
+        {
+            "name_ru": "Тайский чай",
+            "name_en": "Thai tea",
+            "description_ru": "Традиционный тайский чай",
+            "description_en": "Traditional Thai tea",
+            "price": 80,
+            "currency": "THB",
+            "category": "beverages"
+        },
+        {
+            "name_ru": "Кофе эспрессо",
+            "name_en": "Espresso coffee",
+            "description_ru": "Крепкий итальянский эспрессо",
+            "description_en": "Strong Italian espresso",
+            "price": 90,
+            "currency": "THB",
+            "category": "beverages"
+        },
+        {
+            "name_ru": "Капучино",
+            "name_en": "Cappuccino",
+            "description_ru": "Кофе с молочной пенкой",
+            "description_en": "Coffee with milk foam",
+            "price": 120,
+            "currency": "THB",
+            "category": "beverages"
+        },
+        {
+            "name_ru": "Сангрия",
+            "name_en": "Sangria",
+            "description_ru": "Испанский фруктовый коктейль с вином",
+            "description_en": "Spanish fruit cocktail with wine",
+            "price": 280,
+            "currency": "THB",
+            "category": "alcohol"
+        },
+        {
+            "name_ru": "Мохито",
+            "name_en": "Mojito",
+            "description_ru": "Кубинский коктейль с мятой и лаймом",
+            "description_en": "Cuban cocktail with mint and lime",
+            "price": 250,
+            "currency": "THB",
+            "category": "alcohol"
+        },
+        {
+            "name_ru": "Пиво Chang",
+            "name_en": "Chang beer",
+            "description_ru": "Популярное тайское пиво",
+            "description_en": "Popular Thai beer",
+            "price": 120,
+            "currency": "THB",
+            "category": "alcohol"
+        },
+        {
+            "name_ru": "Вино красное дом",
+            "name_en": "House red wine",
+            "description_ru": "Красное вино домашнего производства",
+            "description_en": "House red wine",
+            "price": 350,
+            "currency": "THB",
+            "category": "alcohol"
         }
     ]
 }
