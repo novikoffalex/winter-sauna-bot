@@ -142,7 +142,7 @@ class TranscriptionService
         
         // Ключевые слова для бронирования
         $bookingKeywords = [
-            'ru' => ['записаться', 'забронировать', 'запись', 'хочу', 'нужно', 'можно', 'прийти', 'приехать'],
+            'ru' => ['записаться', 'забронировать', 'запись', 'хочу', 'нужно', 'можно', 'прийти', 'приехать', 'попариться', 'попарить'],
             'en' => ['book', 'reserve', 'appointment', 'want', 'need', 'can', 'come', 'visit']
         ];
 
@@ -154,7 +154,10 @@ class TranscriptionService
                 'баня' => 'sauna',
                 'сауна' => 'sauna',
                 'парение' => 'steaming',
-                'парилка' => 'steaming'
+                'парилка' => 'steaming',
+                'попариться' => 'steaming',
+                'попарить' => 'steaming',
+                'париться' => 'steaming'
             ],
             'en' => [
                 'massage' => 'massage',
@@ -226,7 +229,7 @@ class TranscriptionService
         }
 
         return [
-            'is_booking' => $isBooking && $confidence > 0.2,
+            'is_booking' => $isBooking && $confidence > 0.1,
             'service' => $service,
             'date' => $date,
             'time' => $time,
