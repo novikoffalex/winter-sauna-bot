@@ -289,6 +289,12 @@ class AIServiceLocalized
                 return;
             }
             
+            if ($status === 'requires_action') {
+                // Обрабатываем функции
+                $this->handleFunctionCalls($threadId, $runId, $response);
+                continue;
+            }
+            
             if ($status === 'failed' || $status === 'cancelled') {
                 throw new Exception("Run failed with status: $status");
             }
@@ -298,6 +304,122 @@ class AIServiceLocalized
         }
         
         throw new Exception("Run timeout after $maxAttempts attempts");
+    }
+
+    /**
+     * Обработка вызовов функций
+     */
+    private function handleFunctionCalls($threadId, $runId, $runResponse)
+    {
+        $toolCalls = $runResponse['required_action']['submit_tool_outputs']['tool_calls'] ?? [];
+        $toolOutputs = [];
+        
+        foreach ($toolCalls as $toolCall) {
+            $functionName = $toolCall['function']['name'];
+            $arguments = json_decode($toolCall['function']['arguments'], true);
+            $callId = $toolCall['id'];
+            
+            error_log("Handling function call: $functionName with args: " . json_encode($arguments));
+            
+            try {
+                $result = $this->executeFunction($functionName, $arguments);
+                $toolOutputs[] = [
+                    'tool_call_id' => $callId,
+                    'output' => $result
+                ];
+            } catch (Exception $e) {
+                error_log("Function execution error: " . $e->getMessage());
+                $toolOutputs[] = [
+                    'tool_call_id' => $callId,
+                    'output' => 'Error: ' . $e->getMessage()
+                ];
+            }
+        }
+        
+        // Отправляем результаты обратно
+        $this->makeRequest("/threads/{$threadId}/runs/{$runId}/submit_tool_outputs", [
+            'tool_outputs' => $toolOutputs
+        ], 'POST');
+    }
+
+    /**
+     * Выполнение функций
+     */
+    private function executeFunction($functionName, $arguments)
+    {
+        switch ($functionName) {
+            case 'create_payment_link':
+                return $this->createPaymentLink($arguments['service_name'], $arguments['price_thb']);
+            
+            case 'create_qr_ticket':
+                return $this->createQrTicket($arguments['order_id']);
+            
+            default:
+                throw new Exception("Unknown function: $functionName");
+        }
+    }
+
+    /**
+     * Создание ссылки на оплату
+     */
+    private function createPaymentLink($serviceName, $priceThb)
+    {
+        // Конвертируем THB в USD
+        $priceUsd = $priceThb * 0.027; // Примерный курс
+        
+        // Минимальная сумма 15 USD
+        if ($priceUsd < 15) {
+            $priceUsd = 15;
+        }
+        
+        // Создаем ссылку через NOWPayments
+        $orderId = 'zima_' . time() . '_' . rand(1000, 9999);
+        $paymentUrl = "https://nowpayments.io/payment?iid=" . $orderId . "&amount=" . $priceUsd . "&currency=USDTTRC20";
+        
+        // Сохраняем информацию о заказе
+        $this->saveOrderInfo($orderId, $serviceName, $priceThb, $priceUsd);
+        
+        return "Ссылка для оплаты: $paymentUrl\nУслуга: $serviceName\nСумма: $priceUsd USDT (USDTTRC20)";
+    }
+
+    /**
+     * Создание QR-билета
+     */
+    private function createQrTicket($orderId)
+    {
+        // Здесь можно добавить логику создания QR-билета
+        return "QR-билет создан для заказа: $orderId";
+    }
+
+    /**
+     * Сохранение информации о заказе
+     */
+    private function saveOrderInfo($orderId, $serviceName, $priceThb, $priceUsd)
+    {
+        $orderData = [
+            'order_id' => $orderId,
+            'service_name' => $serviceName,
+            'price_thb' => $priceThb,
+            'price_usd' => $priceUsd,
+            'currency' => 'USDTTRC20',
+            'status' => 'pending',
+            'created_at' => date('Y-m-d H:i:s')
+        ];
+        
+        $ordersFile = __DIR__ . '/../data/orders.json';
+        $orders = [];
+        
+        if (file_exists($ordersFile)) {
+            $orders = json_decode(file_get_contents($ordersFile), true) ?: [];
+        }
+        
+        $orders[$orderId] = $orderData;
+        
+        if (!is_dir(dirname($ordersFile))) {
+            mkdir(dirname($ordersFile), 0755, true);
+        }
+        
+        file_put_contents($ordersFile, json_encode($orders, JSON_PRETTY_PRINT));
     }
 
     /**
