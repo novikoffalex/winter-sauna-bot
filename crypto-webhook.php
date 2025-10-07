@@ -10,8 +10,8 @@ require_once 'src/PaymentHandler.php';
 $input = file_get_contents('php://input');
 $signature = $_SERVER['HTTP_CRYPTO_PAY_SIGNATURE'] ?? '';
 
-// Создаем обработчик платежей
-$paymentHandler = new PaymentHandler();
+// Создаем обработчик платежей с русским языком по умолчанию
+$paymentHandler = new PaymentHandler('ru');
 
 // Валидируем webhook (CoinGate не требует подписи)
 // if (!$paymentHandler->validateWebhook($input, $signature)) {

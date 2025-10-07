@@ -158,14 +158,7 @@ class PaymentHandler
         // Отправляем сообщение со ссылкой на билет
         $this->telegramService->sendMessage($chatId, $message);
 
-        // Отправляем дополнительную информацию
-        $infoMessage = "🔍 **" . $this->localization->t('ticket_details') . ":**\n\n";
-        $infoMessage .= "**" . $this->localization->t('access_code') . ":** `{$ticketData['access_code']}`\n";
-        $infoMessage .= "**" . $this->localization->t('location') . ":** " . SAUNA_LOCATION . "\n";
-        $infoMessage .= "**" . $this->localization->t('working_hours') . ":** " . SAUNA_WORKING_HOURS . "\n\n";
-        $infoMessage .= "❓ " . $this->localization->t('if_questions_contact');
-
-        $this->telegramService->sendMessage($chatId, $infoMessage);
+        // Дополнительная информация убрана - все в одном сообщении
     }
 
     /**

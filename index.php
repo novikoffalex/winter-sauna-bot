@@ -35,7 +35,7 @@ if (isset($_GET['admin']) && $_GET['admin'] === 'test-payment') {
     ];
     
     require_once 'src/PaymentHandler.php';
-    $paymentHandler = new PaymentHandler();
+    $paymentHandler = new PaymentHandler('ru');
     
     try {
         $result = $paymentHandler->handleSuccessfulPayment($testPaymentData);
