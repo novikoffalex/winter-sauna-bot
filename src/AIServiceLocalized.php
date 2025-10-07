@@ -332,6 +332,7 @@ class AIServiceLocalized
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
             'Authorization: Bearer ' . $this->apiKey,
+            'OpenAI-Beta: assistants=v2',
             'User-Agent: Zima-SPA-Bot/1.0'
         ]);
 
