@@ -19,9 +19,13 @@ define('TELEGRAM_BOT_TOKEN', $_ENV['TELEGRAM_BOT_TOKEN'] ?? '');
 define('TELEGRAM_WEBHOOK_URL', $_ENV['TELEGRAM_WEBHOOK_URL'] ?? '');
 define('BOT_USERNAME', $_ENV['BOT_USERNAME'] ?? 'ZimaSaunaBot');
 
-// Конфигурация OpenAI
+// Конфигурация OpenAI (для транскрипции голосовых сообщений)
 define('OPENAI_API_KEY', $_ENV['OPENAI_API_KEY'] ?? '');
 define('OPENAI_MODEL', $_ENV['OPENAI_MODEL'] ?? 'gpt-4');
+
+// Конфигурация Google Gemini
+define('GEMINI_API_KEY', $_ENV['GEMINI_API_KEY'] ?? '');
+define('GEMINI_MODEL', $_ENV['GEMINI_MODEL'] ?? 'gemini-pro');
 
 // Информация о бане
 define('SAUNA_NAME', $_ENV['SAUNA_NAME'] ?? 'Зима');
@@ -42,7 +46,7 @@ define('WEBHOOK_VERIFICATION_TOKEN', $_ENV['WEBHOOK_VERIFICATION_TOKEN'] ?? '');
 define('NODE_ENV', $_ENV['NODE_ENV'] ?? 'development');
 
 // Проверяем обязательные переменные
-$required_vars = ['TELEGRAM_BOT_TOKEN', 'OPENAI_API_KEY'];
+$required_vars = ['TELEGRAM_BOT_TOKEN', 'GEMINI_API_KEY'];
 foreach ($required_vars as $var) {
     if (empty(constant($var))) {
         error_log("Missing required environment variable: $var");

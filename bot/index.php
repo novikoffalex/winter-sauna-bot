@@ -270,7 +270,7 @@ if (isset($_GET['admin']) && $_GET['admin'] === 'update-assistant') {
         
         <?php
         // Проверяем конфигурацию
-        $configOk = !empty(TELEGRAM_BOT_TOKEN) && !empty(OPENAI_API_KEY);
+        $configOk = !empty(TELEGRAM_BOT_TOKEN) && !empty(GEMINI_API_KEY);
         
         if ($configOk) {
             echo '<div class="status">✅ Бот настроен и готов к работе!</div>';

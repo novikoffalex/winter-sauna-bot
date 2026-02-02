@@ -4,7 +4,7 @@
  */
 
 require_once 'TelegramService.php';
-require_once 'AIServiceLocalized.php';
+require_once 'GeminiService.php';
 require_once 'LocalizationService.php';
 require_once 'TranscriptionService.php';
 
@@ -74,7 +74,7 @@ class TelegramWebhookHandlerLocalized
         
         // Инициализируем локализацию и AI сервис
         $this->localization = new LocalizationService($userLanguage);
-        $this->aiService = new AIServiceLocalized($userLanguage);
+        $this->aiService = new GeminiService($userLanguage);
         $this->aiService->initialize();
 
         error_log("Processing message from chat {$chatId} in language {$userLanguage}: {$text}");
@@ -233,7 +233,7 @@ class TelegramWebhookHandlerLocalized
         // Инициализируем локализацию для callback query
         $userLanguage = $this->detectUserLanguage($from);
         $this->localization = new LocalizationService($userLanguage);
-        $this->aiService = new AIServiceLocalized($userLanguage);
+        $this->aiService = new GeminiService($userLanguage);
         $this->aiService->initialize();
 
         error_log("Processing callback query from chat {$chatId} in language {$userLanguage}: {$data}");

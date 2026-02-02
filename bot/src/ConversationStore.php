@@ -42,6 +42,11 @@ class ConversationStore
         return $messages;
     }
 
+    public function getHistory($chatId)
+    {
+        return $this->load($chatId);
+    }
+
     private function getFile($chatId)
     {
         return $this->dir . '/chat_' . $chatId . '.json';
