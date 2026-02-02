@@ -1,31 +1,20 @@
 <?php
-/**
- * Lark AI Bot - PHP версия
- * Главный файл для обработки webhook от Lark
- */
 
-require_once 'config/config.php';
-require_once 'src/LarkService.php';
-require_once 'src/AIService.php';
-require_once 'src/WebhookHandler.php';
+use Illuminate\Foundation\Application;
+use Illuminate\Http\Request;
 
-// Устанавливаем заголовки
-header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: POST, GET, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
+define('LARAVEL_START', microtime(true));
 
-// Обрабатываем OPTIONS запросы
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
-    exit();
+// Determine if the application is in maintenance mode...
+if (file_exists($maintenance = __DIR__.'/../storage/framework/maintenance.php')) {
+    require $maintenance;
 }
 
-try {
-    $webhookHandler = new WebhookHandler();
-    $webhookHandler->handle();
-} catch (Exception $e) {
-    error_log("Webhook error: " . $e->getMessage());
-    http_response_code(500);
-    echo json_encode(['error' => 'Internal server error']);
-}
+// Register the Composer autoloader...
+require __DIR__.'/../vendor/autoload.php';
+
+// Bootstrap Laravel and handle the request...
+/** @var Application $app */
+$app = require_once __DIR__.'/../bootstrap/app.php';
+
+$app->handleRequest(Request::capture());

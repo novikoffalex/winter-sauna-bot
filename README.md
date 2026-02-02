@@ -1,177 +1,121 @@
-# Winter Sauna Bot 🧖‍♀️ (PHP версия)
+<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
-Интеллектуальный Telegram бот для бани "Зима" на Пхукете с интеграцией ИИ для помощи клиентам с бронированием и консультациями.
+<p align="center">
+<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
+<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
+</p>
 
-## 🚀 Возможности
+## About Laravel
 
-- **Умные ответы**: Интеграция с OpenAI GPT-4 для естественного общения
-- **Бронирование**: Помощь в бронировании услуг бани
-- **Консультации**: Информация о банных процедурах и услугах
-- **Расписание**: Информация о времени работы и доступности
-- **Telegram интеграция**: Полная поддержка Telegram Bot API
+Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-## 📋 Требования
+- [Simple, fast routing engine](https://laravel.com/docs/routing).
+- [Powerful dependency injection container](https://laravel.com/docs/container).
+- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
+- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
+- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
+- [Robust background job processing](https://laravel.com/docs/queues).
+- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
 
-- PHP 7.4+ 
-- cURL расширение
-- JSON расширение
-- Аккаунт в Lark Open Platform
-- OpenAI API ключ
-- ngrok для локального тестирования
+Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-## 🛠 Установка
+## Learning Laravel
 
-1. **Клонируйте репозиторий**
-```bash
-git clone https://gitlab.com/a.novikov6/staff-helper.git
-cd staff-helper
-```
+Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
 
-2. **Настройте переменные окружения**
-```bash
-cp env.php .env
-```
+If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-3. **Отредактируйте .env файл** с вашими API ключами
+## Laravel Sponsors
 
-## 🚀 Быстрый запуск
+We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
 
-```bash
-# Запустите локальный сервер
-php start-server.php
-```
+### Premium Partners
 
-## 🔧 Настройка переменных окружения
+- **[Vehikl](https://vehikl.com)**
+- **[Tighten Co.](https://tighten.co)**
+- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
+- **[64 Robots](https://64robots.com)**
+- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
+- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
+- **[Redberry](https://redberry.international/laravel-development)**
+- **[Active Logic](https://activelogic.com)**
 
-Отредактируйте файл `.env`:
+## Contributing
 
-```env
-# Lark Bot Configuration
-LARK_APP_ID=your_app_id_here
-LARK_APP_SECRET=your_app_secret_here
-LARK_WEBHOOK_URL=http://localhost:8000/webhook.php
+Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
 
-# OpenAI Configuration
-OPENAI_API_KEY=your_openai_api_key_here
-OPENAI_MODEL=gpt-4
+## Code of Conduct
 
-# Security
-WEBHOOK_VERIFICATION_TOKEN=your_verification_token_here
-```
+In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
-## 🔧 Настройка Lark Bot
+## Security Vulnerabilities
 
-### 1. Создание приложения в Lark
+If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
-1. Перейдите в [Lark Open Platform](https://open.feishu.cn/)
-2. Создайте новое приложение
-3. В разделе "Credentials" скопируйте `App ID` и `App Secret`
+## Deploy to Laravel Cloud
 
-### 2. Настройка Event Subscriptions
+This project is configured for deployment to Laravel Cloud. The main Laravel application serves the web routes, while the Telegram bot runs as a separate process.
 
-1. В разделе "Event Subscriptions" включите подписку на события
-2. Добавьте URL вашего webhook: `https://your-ngrok-url.ngrok.io/webhook.php`
-3. Подпишитесь на события:
-   - `im.message.receive_v1` - получение сообщений
-   - `im.message.message_read_v1` - прочтение сообщений
+### Deployment Steps
 
-### 3. Настройка Permissions
+1. **Connect your repository** to Laravel Cloud
+2. **Configure environment variables** in Laravel Cloud dashboard:
+   - All bot-related environment variables from `bot/.env` should be added to Laravel Cloud environment
+3. **Deploy the application** - Laravel Cloud will automatically:
+   - Install Composer dependencies
+   - Run migrations (if needed)
+   - Start the Laravel web server
 
-В разделе "Permissions" добавьте необходимые права:
-- `im:message` - отправка сообщений
-- `im:message:read` - чтение сообщений
-- `im:chat` - доступ к чатам
-- `contact:user.id:read` - чтение информации о пользователях
+### Running the Bot Process
 
-### 4. Публикация приложения
-
-1. В разделе "Version Management" создайте версию
-2. Запросите публикацию приложения
-3. После одобрения добавьте бота в нужные чаты
-
-## 📁 Структура проекта
-
-```
-├── index.php                # Главный файл
-├── webhook.php              # Webhook endpoint
-├── health.php               # Health check
-├── start-server.php         # Скрипт запуска сервера
-├── test-webhook.php         # Тестирование webhook
-├── config/
-│   └── config.php           # Конфигурация
-├── src/
-│   ├── WebhookHandler.php   # Обработка webhook событий
-│   ├── LarkService.php      # Интеграция с Lark API
-│   └── AIService.php        # Интеграция с OpenAI
-└── env.php                  # Шаблон переменных окружения
-```
-
-## 🔌 API Endpoints
-
-### `POST /webhook.php`
-Основной endpoint для получения событий от Lark.
-
-**Поддерживаемые события:**
-- `url_verification` - проверка URL
-- `im.message.receive_v1` - получение сообщений
-
-### `GET /health.php`
-Проверка состояния сервиса.
-
-## 🧪 Тестирование
+The bot runs as a separate process. To start it, use the provided script:
 
 ```bash
-# Тестирование webhook
-php test-webhook.php
-
-# Проверка health check
-curl http://localhost:8000/health.php
+./scripts/run-bot.sh
 ```
 
-## 🤖 Использование бота
+Or manually:
 
-### В приватном чате
-Просто напишите боту любое сообщение.
-
-### В групповом чате
-Упомяните бота (@бот) или используйте ключевые слова:
-- "помощь", "помоги"
-- "задача", "план"
-- "напомни"
-
-### Примеры команд
-
-```
-👤 Пользователь: Помоги спланировать день
-🤖 Бот: 📋 Отлично! Давайте составим план на день. 
-        Расскажите, какие у вас основные задачи и приоритеты?
-
-👤 Пользователь: Напомни мне про встречу в 15:00
-🤖 Бот: ⏰ Конечно! Я напомню вам про встречу в 15:00. 
-        Что это за встреча и с кем?
-
-👤 Пользователь: Создай список покупок
-🤖 Бот: 📋 Создаю список покупок! Напишите, что нужно купить, 
-        и я структурирую список для удобства.
+```bash
+cd bot
+php -S 0.0.0.0:${PORT:-8000} -t .
 ```
 
-## 🚨 Устранение неполадок
+In Laravel Cloud, you can configure a separate worker/process to run the bot using the `run-bot.sh` script.
 
-### Бот не отвечает
-1. Проверьте логи PHP: `tail -f /var/log/php_errors.log`
-2. Убедитесь, что webhook URL доступен через ngrok
-3. Проверьте настройки приложения в Lark
+## Run bot locally
 
-### Ошибки API
-1. Проверьте правильность App ID и Secret в .env
-2. Убедитесь, что у приложения есть необходимые права
-3. Проверьте лимиты OpenAI API
+To run the bot locally for development:
 
-### Проблемы с ngrok
-1. Убедитесь, что ngrok запущен: `ngrok http 8000`
-2. Проверьте, что URL в Lark соответствует ngrok URL
-3. Убедитесь, что webhook URL заканчивается на `/webhook.php`
+1. **Start the Laravel application**:
+   ```bash
+   php artisan serve
+   ```
+   This will start the Laravel web server (usually on http://localhost:8000)
 
----
+2. **Start the bot in a separate terminal**:
+   ```bash
+   ./scripts/run-bot.sh
+   ```
+   Or manually:
+   ```bash
+   cd bot
+   php -S 0.0.0.0:8001 -t .
+   ```
 
-**Удачного использования! 🚀**
+3. **Configure webhook** (if needed):
+   - Use ngrok or similar tool to expose your local bot server
+   - Update webhook URL in Telegram Bot settings
+
+### Bot Configuration
+
+The bot configuration is located in the `bot/` directory. Make sure to:
+- Copy `bot/env.example` to `bot/.env` (if exists)
+- Configure all required environment variables
+- Install bot dependencies: `cd bot && composer install`
+
+## License
+
+The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
