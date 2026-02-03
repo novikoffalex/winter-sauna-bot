@@ -9,62 +9,106 @@ Route::get('/', function () {
 
 // Прямой обработчик для Telegram webhook
 Route::any('/bot/webhook.php', function (Request $request) {
-    $botPath = base_path('bot');
-    
-    // Устанавливаем рабочий каталог
-    chdir($botPath);
-    
-    // Загружаем конфигурацию
-    require_once $botPath . '/config/config.php';
-    require_once $botPath . '/src/TelegramWebhookHandlerLocalized.php';
-    
-    // Получаем POST данные
-    $input = $request->getContent();
-    if (empty($input)) {
-        $input = json_encode($request->all());
+    try {
+        $botPath = base_path('bot');
+        
+        // Проверяем существование директории
+        if (!is_dir($botPath)) {
+            \Log::error("Bot directory not found: $botPath");
+            return response('Bot directory not found', 500);
+        }
+        
+        // Устанавливаем рабочий каталог
+        chdir($botPath);
+        
+        // Загружаем конфигурацию
+        $configPath = $botPath . '/config/config.php';
+        if (!file_exists($configPath)) {
+            \Log::error("Config file not found: $configPath");
+            return response('Config file not found', 500);
+        }
+        require_once $configPath;
+        
+        $handlerPath = $botPath . '/src/TelegramWebhookHandlerLocalized.php';
+        if (!file_exists($handlerPath)) {
+            \Log::error("Handler file not found: $handlerPath");
+            return response('Handler file not found', 500);
+        }
+        require_once $handlerPath;
+        
+        // Получаем POST данные
+        $input = $request->getContent();
+        if (empty($input)) {
+            $input = json_encode($request->all());
+        }
+        
+        // Сохраняем в глобальную переменную для доступа в webhook
+        $GLOBALS['HTTP_RAW_POST_DATA'] = $input;
+        
+        // Создаем обработчик и обрабатываем webhook
+        $handler = new TelegramWebhookHandlerLocalized();
+        $handler->handleWebhook();
+        
+        // Очищаем глобальные переменные
+        unset($GLOBALS['HTTP_RAW_POST_DATA']);
+        
+        return response('OK', 200);
+    } catch (\Exception $e) {
+        \Log::error('Webhook error: ' . $e->getMessage());
+        return response('Error: ' . $e->getMessage(), 500);
     }
-    
-    // Сохраняем в глобальную переменную для доступа в webhook
-    $GLOBALS['HTTP_RAW_POST_DATA'] = $input;
-    
-    // Создаем обработчик и обрабатываем webhook
-    $handler = new TelegramWebhookHandlerLocalized();
-    $handler->handleWebhook();
-    
-    // Очищаем глобальные переменные
-    unset($GLOBALS['HTTP_RAW_POST_DATA']);
-    
-    return response('OK', 200);
 });
 
 // Прямой обработчик для NOWPayments webhook
 Route::any('/bot/crypto-webhook.php', function (Request $request) {
-    $botPath = base_path('bot');
-    
-    // Устанавливаем рабочий каталог
-    chdir($botPath);
-    
-    // Загружаем конфигурацию
-    require_once $botPath . '/config/config.php';
-    
-    // Получаем POST данные
-    $input = $request->getContent();
-    if (empty($input)) {
-        $input = json_encode($request->all());
+    try {
+        $botPath = base_path('bot');
+        
+        // Проверяем существование директории
+        if (!is_dir($botPath)) {
+            \Log::error("Bot directory not found: $botPath");
+            return response('Bot directory not found', 500);
+        }
+        
+        // Устанавливаем рабочий каталог
+        chdir($botPath);
+        
+        // Загружаем конфигурацию
+        $configPath = $botPath . '/config/config.php';
+        if (!file_exists($configPath)) {
+            \Log::error("Config file not found: $configPath");
+            return response('Config file not found', 500);
+        }
+        require_once $configPath;
+        
+        // Получаем POST данные
+        $input = $request->getContent();
+        if (empty($input)) {
+            $input = json_encode($request->all());
+        }
+        
+        // Сохраняем в глобальную переменную
+        $GLOBALS['HTTP_RAW_POST_DATA'] = $input;
+        
+        // Выполняем файл crypto-webhook.php
+        $cryptoWebhookPath = $botPath . '/crypto-webhook.php';
+        if (!file_exists($cryptoWebhookPath)) {
+            \Log::error("Crypto webhook file not found: $cryptoWebhookPath");
+            return response('Crypto webhook file not found', 500);
+        }
+        
+        ob_start();
+        require $cryptoWebhookPath;
+        $output = ob_get_clean();
+        
+        // Очищаем глобальные переменные
+        unset($GLOBALS['HTTP_RAW_POST_DATA']);
+        
+        return response($output, 200);
+    } catch (\Exception $e) {
+        \Log::error('Crypto webhook error: ' . $e->getMessage());
+        return response('Error: ' . $e->getMessage(), 500);
     }
-    
-    // Сохраняем в глобальную переменную
-    $GLOBALS['HTTP_RAW_POST_DATA'] = $input;
-    
-    // Выполняем файл crypto-webhook.php
-    ob_start();
-    require $botPath . '/crypto-webhook.php';
-    $output = ob_get_clean();
-    
-    // Очищаем глобальные переменные
-    unset($GLOBALS['HTTP_RAW_POST_DATA']);
-    
-    return response($output, 200);
 });
 
 // Проксирование других запросов к боту
