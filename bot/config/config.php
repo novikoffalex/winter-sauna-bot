@@ -25,7 +25,7 @@ define('OPENAI_MODEL', $_ENV['OPENAI_MODEL'] ?? 'gpt-4');
 
 // Конфигурация Google Gemini
 define('GEMINI_API_KEY', $_ENV['GEMINI_API_KEY'] ?? '');
-define('GEMINI_MODEL', $_ENV['GEMINI_MODEL'] ?? 'gemini-pro');
+define('GEMINI_MODEL', $_ENV['GEMINI_MODEL'] ?? 'gemini-2.0-flash');
 
 // Информация о бане
 define('SAUNA_NAME', $_ENV['SAUNA_NAME'] ?? 'Зима');

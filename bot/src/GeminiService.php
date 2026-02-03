@@ -18,7 +18,9 @@ class GeminiService
     public function __construct($userLanguage = 'en')
     {
         $this->apiKey = $_ENV['GEMINI_API_KEY'] ?? '';
-        $this->model = $_ENV['GEMINI_MODEL'] ?? 'gemini-pro';
+        // Используем правильное имя модели для v1beta API
+        // Доступные модели: gemini-2.5-flash, gemini-2.0-flash, gemini-1.5-flash-latest
+        $this->model = $_ENV['GEMINI_MODEL'] ?? 'gemini-2.0-flash';
         $this->baseUrl = 'https://generativelanguage.googleapis.com/v1beta';
         $this->localization = new LocalizationService($userLanguage);
         $this->store = new ConversationStore();
@@ -109,7 +111,14 @@ class GeminiService
                 ]
             ];
             
-            $response = $this->makeRequest('/models/' . $this->model . ':generateContent', $requestData, 'POST');
+            // Используем правильный формат для модели Gemini
+            // Формат: models/gemini-1.5-flash-latest или models/gemini-pro
+            $modelName = $this->model;
+            if (!str_starts_with($modelName, 'models/')) {
+                $modelName = 'models/' . $modelName;
+            }
+            
+            $response = $this->makeRequest('/' . $modelName . ':generateContent', $requestData, 'POST');
 
             // Извлекаем ответ
             $aiResponse = $response['candidates'][0]['content']['parts'][0]['text'] ?? '';
@@ -132,15 +141,33 @@ class GeminiService
         } catch (Exception $e) {
             error_log('Gemini processing error: ' . $e->getMessage());
             
-            if (strpos($e->getMessage(), 'quota') !== false || strpos($e->getMessage(), '429') !== false) {
-                return $this->localization->t('api_quota_exceeded', ['ru' => 'Извините, у меня закончились лимиты API. Попробуйте позже.', 'en' => 'Sorry, I have exceeded API limits. Please try later.']);
+            // Проверка на квоту и лимиты
+            if (strpos($e->getMessage(), 'quota') !== false || 
+                strpos($e->getMessage(), 'Quota exceeded') !== false ||
+                strpos($e->getMessage(), '429') !== false) {
+                return $this->localization->getLanguage() === 'ru' 
+                    ? '⚠️ Извините, превышен лимит запросов к API. Попробуйте через несколько секунд.'
+                    : '⚠️ Sorry, API quota exceeded. Please try again in a few seconds.';
             }
             
-            if (strpos($e->getMessage(), 'rate_limit') !== false) {
-                return $this->localization->t('rate_limit_exceeded', ['ru' => 'Слишком много запросов. Подождите немного и попробуйте снова.', 'en' => 'Too many requests. Please wait a moment and try again.']);
+            if (strpos($e->getMessage(), 'rate_limit') !== false || 
+                strpos($e->getMessage(), 'Please retry in') !== false) {
+                // Извлекаем время ожидания из сообщения
+                if (preg_match('/Please retry in ([\d.]+)s/', $e->getMessage(), $matches)) {
+                    $waitTime = ceil((float)$matches[1]);
+                    return $this->localization->getLanguage() === 'ru'
+                        ? "⏳ Слишком много запросов. Подождите {$waitTime} секунд и попробуйте снова."
+                        : "⏳ Too many requests. Please wait {$waitTime} seconds and try again.";
+                }
+                return $this->localization->getLanguage() === 'ru'
+                    ? '⏳ Слишком много запросов. Подождите немного и попробуйте снова.'
+                    : '⏳ Too many requests. Please wait a moment and try again.';
             }
             
-            return $this->localization->t('processing_error', ['ru' => 'Извините, произошла ошибка при обработке вашего запроса. Попробуйте переформулировать вопрос.', 'en' => 'Sorry, an error occurred while processing your request. Please try rephrasing your question.']);
+            // Общая ошибка обработки
+            return $this->localization->getLanguage() === 'ru'
+                ? '❌ Извините, произошла ошибка при обработке вашего запроса. Попробуйте переформулировать вопрос.'
+                : '❌ Sorry, an error occurred while processing your request. Please try rephrasing your question.';
         }
     }
 

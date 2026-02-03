@@ -11,7 +11,11 @@ class TicketService
 
     public function __construct()
     {
-        $this->cryptoPayment = new CryptoPaymentService();
+        // CryptoPaymentService не обязателен для генерации QR
+        // Используем только если нужно
+        if (class_exists('CryptoPaymentService')) {
+            $this->cryptoPayment = new CryptoPaymentService();
+        }
     }
 
     /**
