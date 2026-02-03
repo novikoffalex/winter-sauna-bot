@@ -8,6 +8,7 @@ Route::get('/', function () {
     return 'bot ok';
 });
 
+// ВАЖНО: Специфичные маршруты должны быть ПЕРЕД общим маршрутом /bot/{path}
 // Прямой обработчик для Telegram webhook (без .php для совместимости)
 Route::any('/bot/webhook', function (Request $request) {
     try {
@@ -113,7 +114,12 @@ Route::any('/bot/crypto-webhook', function (Request $request) {
 });
 
 // Проксирование других запросов к боту (включая .php файлы)
+// ВАЖНО: Этот маршрут должен быть ПОСЛЕ всех специфичных маршрутов
 Route::any('/bot/{path}', function (Request $request, $path = '') {
+    // Пропускаем специфичные маршруты
+    if (in_array($path, ['webhook', 'webhook.php', 'crypto-webhook', 'crypto-webhook.php'])) {
+        abort(404);
+    }
     $botPath = base_path('bot');
     $requestPath = $path ?: 'index.php';
     
