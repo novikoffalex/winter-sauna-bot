@@ -7,7 +7,67 @@ Route::get('/', function () {
     return 'bot ok';
 });
 
-// Проксирование запросов к боту
+// Прямой обработчик для Telegram webhook
+Route::any('/bot/webhook.php', function (Request $request) {
+    $botPath = base_path('bot');
+    
+    // Устанавливаем рабочий каталог
+    chdir($botPath);
+    
+    // Загружаем конфигурацию
+    require_once $botPath . '/config/config.php';
+    require_once $botPath . '/src/TelegramWebhookHandlerLocalized.php';
+    
+    // Получаем POST данные
+    $input = $request->getContent();
+    if (empty($input)) {
+        $input = json_encode($request->all());
+    }
+    
+    // Сохраняем в глобальную переменную для доступа в webhook
+    $GLOBALS['HTTP_RAW_POST_DATA'] = $input;
+    
+    // Создаем обработчик и обрабатываем webhook
+    $handler = new TelegramWebhookHandlerLocalized();
+    $handler->handleWebhook();
+    
+    // Очищаем глобальные переменные
+    unset($GLOBALS['HTTP_RAW_POST_DATA']);
+    
+    return response('OK', 200);
+});
+
+// Прямой обработчик для NOWPayments webhook
+Route::any('/bot/crypto-webhook.php', function (Request $request) {
+    $botPath = base_path('bot');
+    
+    // Устанавливаем рабочий каталог
+    chdir($botPath);
+    
+    // Загружаем конфигурацию
+    require_once $botPath . '/config/config.php';
+    
+    // Получаем POST данные
+    $input = $request->getContent();
+    if (empty($input)) {
+        $input = json_encode($request->all());
+    }
+    
+    // Сохраняем в глобальную переменную
+    $GLOBALS['HTTP_RAW_POST_DATA'] = $input;
+    
+    // Выполняем файл crypto-webhook.php
+    ob_start();
+    require $botPath . '/crypto-webhook.php';
+    $output = ob_get_clean();
+    
+    // Очищаем глобальные переменные
+    unset($GLOBALS['HTTP_RAW_POST_DATA']);
+    
+    return response($output, 200);
+});
+
+// Проксирование других запросов к боту
 Route::any('/bot/{path}', function (Request $request, $path = '') {
     $botPath = base_path('bot');
     $requestPath = $path ?: 'index.php';
@@ -46,21 +106,6 @@ Route::any('/bot/{path}', function (Request $request, $path = '') {
                         $_POST = array_merge($_POST, $decoded);
                     }
                 }
-            }
-            
-            // Эмулируем php://input через stream wrapper
-            if (isset($GLOBALS['HTTP_RAW_POST_DATA'])) {
-                // Создаем временный файл для эмуляции php://input
-                $tempFile = tmpfile();
-                fwrite($tempFile, $GLOBALS['HTTP_RAW_POST_DATA']);
-                rewind($tempFile);
-                // Переопределяем php://input через stream context
-                stream_context_set_default([
-                    'http' => [
-                        'method' => $request->method(),
-                        'content' => $GLOBALS['HTTP_RAW_POST_DATA']
-                    ]
-                ]);
             }
             
             require $filePath;
