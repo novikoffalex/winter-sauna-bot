@@ -31,10 +31,21 @@ Route::any('/bot/{path}', function (Request $request, $path = '') {
             // Для POST/PUT/PATCH запросов сохраняем содержимое
             if (in_array($request->method(), ['POST', 'PUT', 'PATCH'])) {
                 $input = $request->getContent();
+                // Если контент пустой, пробуем получить из json()
+                if (empty($input)) {
+                    $input = json_encode($request->all());
+                }
                 // Сохраняем в глобальную переменную для доступа в webhook
                 $GLOBALS['HTTP_RAW_POST_DATA'] = $input;
                 // Также в переменную окружения
                 putenv('HTTP_RAW_POST_DATA=' . $input);
+                // Устанавливаем $_POST для совместимости
+                if (!empty($input)) {
+                    $decoded = json_decode($input, true);
+                    if ($decoded) {
+                        $_POST = array_merge($_POST, $decoded);
+                    }
+                }
             }
             
             // Эмулируем php://input через stream wrapper
