@@ -8,8 +8,8 @@ Route::get('/', function () {
     return 'bot ok';
 });
 
-// Прямой обработчик для Telegram webhook
-Route::any('/bot/webhook.php', function (Request $request) {
+// Прямой обработчик для Telegram webhook (без .php для совместимости)
+Route::any('/bot/webhook', function (Request $request) {
     try {
         $botPath = base_path('bot');
         
@@ -60,8 +60,8 @@ Route::any('/bot/webhook.php', function (Request $request) {
     }
 });
 
-// Прямой обработчик для NOWPayments webhook
-Route::any('/bot/crypto-webhook.php', function (Request $request) {
+// Прямой обработчик для NOWPayments webhook (без .php для совместимости)
+Route::any('/bot/crypto-webhook', function (Request $request) {
     try {
         $botPath = base_path('bot');
         
@@ -112,13 +112,16 @@ Route::any('/bot/crypto-webhook.php', function (Request $request) {
     }
 });
 
-// Проксирование других запросов к боту
+// Проксирование других запросов к боту (включая .php файлы)
 Route::any('/bot/{path}', function (Request $request, $path = '') {
     $botPath = base_path('bot');
     $requestPath = $path ?: 'index.php';
     
-    // Если это PHP файл, выполняем его
-    if (str_ends_with($requestPath, '.php')) {
+    // Если путь заканчивается на .php или это пустой путь, обрабатываем как PHP файл
+    if (str_ends_with($requestPath, '.php') || empty($requestPath)) {
+        if (empty($requestPath)) {
+            $requestPath = 'index.php';
+        }
         $filePath = $botPath . '/' . $requestPath;
         
         if (file_exists($filePath)) {
@@ -166,3 +169,83 @@ Route::any('/bot/{path}', function (Request $request, $path = '') {
     // Для других файлов возвращаем 404
     abort(404);
 })->where('path', '.*');
+
+// Обратная совместимость: маршруты с .php перенаправляют на версии без .php
+Route::any('/bot/webhook.php', function (Request $request) {
+    // Просто вызываем тот же обработчик
+    $botPath = base_path('bot');
+    
+    if (!is_dir($botPath)) {
+        \Log::error("Bot directory not found: $botPath");
+        return response('Bot directory not found', 500);
+    }
+    
+    chdir($botPath);
+    
+    $configPath = $botPath . '/config/config.php';
+    if (!file_exists($configPath)) {
+        \Log::error("Config file not found: $configPath");
+        return response('Config file not found', 500);
+    }
+    require_once $configPath;
+    
+    $handlerPath = $botPath . '/src/TelegramWebhookHandlerLocalized.php';
+    if (!file_exists($handlerPath)) {
+        \Log::error("Handler file not found: $handlerPath");
+        return response('Handler file not found', 500);
+    }
+    require_once $handlerPath;
+    
+    $input = $request->getContent();
+    if (empty($input)) {
+        $input = json_encode($request->all());
+    }
+    
+    $GLOBALS['HTTP_RAW_POST_DATA'] = $input;
+    
+    $handler = new TelegramWebhookHandlerLocalized();
+    $handler->handleWebhook();
+    
+    unset($GLOBALS['HTTP_RAW_POST_DATA']);
+    
+    return response('OK', 200);
+});
+
+Route::any('/bot/crypto-webhook.php', function (Request $request) {
+    $botPath = base_path('bot');
+    
+    if (!is_dir($botPath)) {
+        \Log::error("Bot directory not found: $botPath");
+        return response('Bot directory not found', 500);
+    }
+    
+    chdir($botPath);
+    
+    $configPath = $botPath . '/config/config.php';
+    if (!file_exists($configPath)) {
+        \Log::error("Config file not found: $configPath");
+        return response('Config file not found', 500);
+    }
+    require_once $configPath;
+    
+    $input = $request->getContent();
+    if (empty($input)) {
+        $input = json_encode($request->all());
+    }
+    
+    $GLOBALS['HTTP_RAW_POST_DATA'] = $input;
+    
+    $cryptoWebhookPath = $botPath . '/crypto-webhook.php';
+    if (!file_exists($cryptoWebhookPath)) {
+        \Log::error("Crypto webhook file not found: $cryptoWebhookPath");
+        return response('Crypto webhook file not found', 500);
+    }
+    
+    ob_start();
+    require $cryptoWebhookPath;
+    $output = ob_get_clean();
+    
+    unset($GLOBALS['HTTP_RAW_POST_DATA']);
+    
+    return response($output, 200);
+});
