@@ -26,7 +26,16 @@ class TelegramWebhookHandlerLocalized
     public function handleWebhook()
     {
         try {
+            // Поддержка работы через Laravel маршруты
             $input = file_get_contents('php://input');
+            // Если php://input пустой (работа через Laravel), используем глобальную переменную
+            if (empty($input)) {
+                if (isset($GLOBALS['HTTP_RAW_POST_DATA'])) {
+                    $input = $GLOBALS['HTTP_RAW_POST_DATA'];
+                } elseif (getenv('HTTP_RAW_POST_DATA')) {
+                    $input = getenv('HTTP_RAW_POST_DATA');
+                }
+            }
             $update = json_decode($input, true);
 
             if (!$update) {
@@ -64,10 +73,15 @@ class TelegramWebhookHandlerLocalized
      */
     private function handleMessage($message)
     {
+        if (!isset($message['chat']['id'])) {
+            error_log('Invalid message: missing chat id');
+            return;
+        }
+        
         $chatId = $message['chat']['id'];
         $text = $message['text'] ?? '';
-        $messageId = $message['message_id'];
-        $from = $message['from'];
+        $messageId = $message['message_id'] ?? null;
+        $from = $message['from'] ?? null;
 
         // Определяем язык пользователя
         $userLanguage = $this->detectUserLanguage($from);
@@ -195,9 +209,13 @@ class TelegramWebhookHandlerLocalized
 
             $aiResponse = $this->aiService->processMessage($text, $context);
             
-            // Проверяем, содержит ли ответ специальный формат ссылки на оплату
+            // Проверяем, содержит ли ответ JSON с payment_link или упоминание об оплате
             if (strpos($aiResponse, 'PAYMENT_LINK|') === 0) {
                 $this->handlePaymentLinkResponse($chatId, $aiResponse, $messageId);
+            } elseif (preg_match('/"type"\s*:\s*"payment_link"/i', $aiResponse) || 
+                      (stripos($aiResponse, 'оплат') !== false && stripos($aiResponse, 'json') !== false)) {
+                // Если AI вернул JSON с payment_link, извлекаем данные и создаем реальную ссылку
+                $this->handlePaymentLinkJSON($chatId, $aiResponse, $text, $messageId);
             } else {
                 $this->telegramService->sendMessage($chatId, $aiResponse, $messageId);
             }
@@ -634,6 +652,136 @@ class TelegramWebhookHandlerLocalized
         } else {
             // Fallback к обычному сообщению
             $this->telegramService->sendMessage($chatId, $aiResponse, $messageId);
+        }
+    }
+
+    /**
+     * Обработка JSON с payment_link от AI
+     */
+    private function handlePaymentLinkJSON($chatId, $aiResponse, $originalText, $messageId)
+    {
+        try {
+            // Пытаемся извлечь JSON из ответа
+            if (preg_match('/\{[^}]*"type"\s*:\s*"payment_link"[^}]*\}/i', $aiResponse, $matches)) {
+                $jsonData = json_decode($matches[0], true);
+            } else {
+                // Если JSON не найден, но есть упоминание об оплате, создаем ссылку на основе текста
+                $this->createPaymentLinkFromText($chatId, $originalText, $messageId);
+                return;
+            }
+            
+            if (!$jsonData || !isset($jsonData['label'])) {
+                $this->createPaymentLinkFromText($chatId, $originalText, $messageId);
+                return;
+            }
+            
+            // Извлекаем сумму из label (например: "Оплатить 3000 THB")
+            preg_match('/(\d+)\s*THB/i', $jsonData['label'], $priceMatch);
+            $priceThb = $priceMatch[1] ?? 3000; // По умолчанию 3000 THB
+            
+            // Определяем услугу из текста
+            $serviceName = $this->extractServiceFromText($originalText);
+            
+            // Создаем реальную ссылку на оплату
+            require_once 'PaymentHandler.php';
+            require_once 'CurrencyService.php';
+            
+            $currencyService = new CurrencyService();
+            $paymentHandler = new PaymentHandler($this->localization->getLanguage());
+            
+            $usdAmount = $currencyService->convertThbToUsd($priceThb);
+            if ($usdAmount < 15) {
+                $usdAmount = 15;
+            }
+            
+            $result = $paymentHandler->createPaymentInvoice($chatId, $serviceName, $usdAmount, 'USDTTRC20');
+            
+            if ($result['success'] && !empty($result['pay_url'])) {
+                $message = "✅ **" . $this->localization->t('payment_ready', ['ru' => 'Готово к оплате', 'en' => 'Ready to pay']) . "**\n\n";
+                $message .= "🏊‍♀️ **" . $this->localization->t('service', ['ru' => 'Услуга', 'en' => 'Service']) . ":** {$serviceName}\n";
+                $message .= "💰 **" . $this->localization->t('amount', ['ru' => 'Сумма', 'en' => 'Amount']) . ":** {$usdAmount} USDT (≈ {$priceThb} THB)\n\n";
+                $message .= $this->localization->t('payment_complete_for_qr', ['ru' => 'После оплаты QR-билет придет автоматически.', 'en' => 'After payment, QR ticket will arrive automatically.']);
+                
+                $keyboard = [
+                    'inline_keyboard' => [
+                        [
+                            ['text' => '💳 ' . $this->localization->t('pay_now', ['ru' => 'Оплатить сейчас', 'en' => 'Pay Now']), 'url' => $result['pay_url']]
+                        ]
+                    ]
+                ];
+                
+                $this->telegramService->sendMessageWithKeyboard($chatId, $message, $keyboard, $messageId);
+            } else {
+                // Fallback
+                $this->telegramService->sendMessage($chatId, $aiResponse, $messageId);
+            }
+        } catch (Exception $e) {
+            error_log("Payment link JSON handling error: " . $e->getMessage());
+            $this->telegramService->sendMessage($chatId, $aiResponse, $messageId);
+        }
+    }
+    
+    /**
+     * Создание ссылки на оплату из текста пользователя
+     */
+    private function createPaymentLinkFromText($chatId, $text, $messageId)
+    {
+        try {
+            // Извлекаем сумму из текста
+            preg_match('/(\d+)\s*(?:thb|бат|руб|usd|\$)/i', $text, $priceMatch);
+            $priceThb = $priceMatch[1] ?? 3000;
+            
+            $serviceName = $this->extractServiceFromText($text);
+            
+            require_once 'PaymentHandler.php';
+            require_once 'CurrencyService.php';
+            
+            $currencyService = new CurrencyService();
+            $paymentHandler = new PaymentHandler($this->localization->getLanguage());
+            
+            $usdAmount = $currencyService->convertThbToUsd($priceThb);
+            if ($usdAmount < 15) {
+                $usdAmount = 15;
+            }
+            
+            $result = $paymentHandler->createPaymentInvoice($chatId, $serviceName, $usdAmount, 'USDTTRC20');
+            
+            if ($result['success'] && !empty($result['pay_url'])) {
+                $message = "✅ **" . $this->localization->t('payment_ready', ['ru' => 'Готово к оплате', 'en' => 'Ready to pay']) . "**\n\n";
+                $message .= "🏊‍♀️ **" . $this->localization->t('service', ['ru' => 'Услуга', 'en' => 'Service']) . ":** {$serviceName}\n";
+                $message .= "💰 **" . $this->localization->t('amount', ['ru' => 'Сумма', 'en' => 'Amount']) . ":** {$usdAmount} USDT (≈ {$priceThb} THB)\n\n";
+                $message .= $this->localization->t('payment_complete_for_qr', ['ru' => 'После оплаты QR-билет придет автоматически.', 'en' => 'After payment, QR ticket will arrive automatically.']);
+                
+                $keyboard = [
+                    'inline_keyboard' => [
+                        [
+                            ['text' => '💳 ' . $this->localization->t('pay_now', ['ru' => 'Оплатить сейчас', 'en' => 'Pay Now']), 'url' => $result['pay_url']]
+                        ]
+                    ]
+                ];
+                
+                $this->telegramService->sendMessageWithKeyboard($chatId, $message, $keyboard, $messageId);
+            }
+        } catch (Exception $e) {
+            error_log("Create payment from text error: " . $e->getMessage());
+        }
+    }
+    
+    /**
+     * Извлечение названия услуги из текста
+     */
+    private function extractServiceFromText($text)
+    {
+        $textLower = strtolower($text);
+        
+        if (stripos($textLower, 'массаж') !== false || stripos($textLower, 'massage') !== false) {
+            return 'Massage';
+        } elseif (stripos($textLower, 'баня') !== false || stripos($textLower, 'сауна') !== false || stripos($textLower, 'sauna') !== false) {
+            return 'Sauna';
+        } elseif (stripos($textLower, 'спа') !== false || stripos($textLower, 'spa') !== false) {
+            return 'SPA Treatment';
+        } else {
+            return 'Zima SPA Wellness Service';
         }
     }
 
