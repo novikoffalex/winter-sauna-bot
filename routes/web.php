@@ -4,7 +4,12 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 
 Route::get('/', function () {
-    return 'bot ok';
+    try {
+        return 'bot ok';
+    } catch (\Exception $e) {
+        \Log::error('Root route error: ' . $e->getMessage());
+        return response('Error: ' . $e->getMessage(), 500);
+    }
 });
 
 // Прямой обработчик для Telegram webhook
